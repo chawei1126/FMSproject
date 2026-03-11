@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>福爾摩沙project</title>
+        <!-- ★ Favicon（標籤頁圖示）：把下方 href="" 的引號內貼上你的圖片連結（建議 imgbb 的 .png 或 .ico） -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/B521qPfT/IMG-5993.png">
+    <!-- ★ end favicon -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        
+        /* 名詞解釋頂部圖片 */
+.lore-top-image {
+    width: 100%;
+    height: 200px; /* 電腦端高度 */
+    overflow: hidden;
+    margin-bottom: 25px;
+    border-radius: 4px; /* 稍微圓角增加質感 */
+}
+
+.lore-top-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 灰框內的敘述與定義分隔 */
+.concept-divider {
+    border-top: 1px dashed #ccc;
+    margin: 15px 0;
+    position: relative;
+}
+
+.concept-label {
+    font-size: 0.75rem;
+    color: var(--highlight);
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+}
+
+/* 手機端高度調整 */
+@media (max-width: 600px) {
+    .lore-top-image {
+        height: 150px; /* 手機端矮一點 */
+    }
+}
+
+        
+        /* --- 修改後的首頁樣式 --- */
+
+/* 1. 頂圖改為全域感 (移除邊距並強化視覺) */
+.home-image-area {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%); /* 強制突破容器寬度達到全屏 */
+    margin-top: -20px; /* 抵消 main-content 的 padding */
+    height: 40vh; /* 固定高度，增加大氣感 */
+    overflow: hidden;
+}
+
+.home-image-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 確保圖片填滿且不變形 */
+}
+
+/* 2. 首頁文字內容置中 */
+.home-text-content {
+    text-align: center;
+    margin: 40px 0;
+}
+
+/* 3. 調整角色網格與菱形間距 */
+.char-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 30px; /* 增加上下與左右的間距 */
+    padding: 20px;
+    max-width: 900px; /* 稍微放大寬度 */
+    margin: 0 auto;
+    justify-items: center; /* 確保網格內的物件置中 */
+}
+
+@media (min-width: 800px) {
+    .char-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px; /* 電腦版更大的間距 */
+    }
+}
+
+/* 1. 外層容器：負責顯示輪廓線 (filter) */
+.diamond-avatar {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 15px;
+    position: relative;
+    
+    /* 關鍵：在外層套用 drop-shadow，它會根據內層裁切後的形狀產生陰影 */
+    filter: 
+        drop-shadow(2px 0 0 var(--highlight)) 
+        drop-shadow(-2px 0 0 var(--highlight)) 
+        drop-shadow(0 2px 0 var(--highlight)) 
+        drop-shadow(0 -2px 0 var(--highlight));
+}
+
+/* 2. 內層圖片：負責裁切成菱形 */
+.diamond-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* 這裡執行裁切，外層的 filter 就會抓到這個形狀 */
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: var(--accent-color);
+}
+
+/* 5. 警語置中 */
+.warning-statement {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding: 20px;
+}
+
+        
+        :root {
+            --primary-bg: #fcfaf2;
+            --main-color: #2c3e50;
+            --sidebar-width: 220px;
+            --tab-color: #e0e0e0; 
+            /* 777777 模板變數 */
+            --accent-color: #1a365d;
+            --highlight: #246d5e;
+            --text-muted: #888;
+            --progress-bg: #f0f0f0;
+        }
+
+        body { font-family: "Noto Serif TC", "Source Han Serif TC", "Source Han Serif", "宋體", "SimSun", "STSong", serif; background: var(--primary-bg); margin: 0; overflow-x: hidden; }
+
+        header {
+            background: #fff; padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #ddd;
+        }
+
+/* 將宗教頁面中的人造神與教主名字置中 */
+#r-blue-sun h2, 
+#r-green-cross h2 {
+    text-align: center;
+    width: 100%; /* 確保寬度足夠以實現置中 */
+}
+
+
+/* 設定 Logo 容器與圖片樣式 */
+#current-category-title {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+#header-logo {
+    height: 50px; /* 根據您的 Header 高度調整，建議 30-40px 之間 */
+    width: auto;  /* 保持比例 */
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+}
+
+#header-logo:hover {
+    opacity: 0.8;
+}
+
+/* 手機端友好調整 */
+@media (max-width: 600px) {
+    #header-logo {
+        height: 45px; /* 手機端稍微縮小一點點 */
+    }
+}
+
+        /* 漢堡選單 */
+        .top-menu-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(255,255,255,0.98);
+            z-index: 2000; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .top-menu-overlay.show { display: flex; opacity: 1; }
+        .top-menu-overlay a {
+            font-size: 1.5rem; margin: 10px; text-decoration: none; color: var(--main-color); 
+            opacity: 0; transform: translateY(30px); transition: 0.5s ease;
+        }
+        .top-menu-overlay.show a { opacity: 1; transform: translateY(0); }
+        .menu-divider { width: 150px; height: 1px; background: rgba(0,0,0,0.1); margin: 10px 0; opacity: 0; transition: 0.5s ease; }
+        .top-menu-overlay.show .menu-divider { opacity: 1; }
+
+        /* 側邊欄樣式 */
+        .sidebar {
+            height: calc(100% - 50px); width: 0; position: fixed;
+            top: 50px; left: 0; background: var(--tab-color);
+            overflow-x: hidden; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 900; border-right: 1px solid #ccc;
+        }
+        .sidebar-content { width: var(--sidebar-width); padding-top: 10px; }
+
+        /* 文字分隔線樣式 */
+        .section-divider {
+            display: flex; align-items: center;
+            margin: 20px 10px 10px 10px;
+            color: #999; font-size: 0.75rem; letter-spacing: 2px;
+        }
+        .section-divider::before, .section-divider::after {
+            content: ""; flex: 1; height: 1px; background: #ccc;
+        }
+        .section-divider::before { margin-right: 10px; }
+        .section-divider::after { margin-left: 10px; }
+
+        /* 第一層摺疊 */
+        .collapsible {
+            background: #d0d0d0; color: #444; cursor: pointer; padding: 12px 20px; width: 100%; 
+            border: none; text-align: left; outline: none; font-size: 1rem; font-family: inherit;
+            display: flex; justify-content: space-between; border-bottom: 1px solid #bbb;
+        }
+        .collapsible:after { content: '▸'; font-size: 0.8rem; }
+        .active-collapse:after { content: '▾'; }
+
+        /* 第二層子選單 */
+        .sub-menu { padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #e8e8e8; }
+        .sub-menu .direct-link { padding: 10px 35px; text-decoration: none; font-size: 0.95rem; color: #666; display: block; border-bottom: 1px solid #ddd; }
+
+        /* 第三層巢狀標題 */
+        .nested-title {
+            padding: 10px 25px; cursor: pointer; font-size: 0.95rem; color: #555; font-weight: bold;
+            display: flex; justify-content: space-between; border-bottom: 1px solid #ddd;
+        }
+        .nested-title:after { content: '▸'; font-size: 0.7rem; }
+        .active-nested:after { content: '▾'; }
+
+        /* 第三層連結 */
+        .nested-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #f0f0f0; }
+        .nested-content a { padding: 10px 45px; text-decoration: none; font-size: 0.85rem; color: #777; display: block; border-bottom: 1px solid #eee; }
+
+        /* 側邊欄切換按鈕 */
+        .sidebar-toggle {
+            position: fixed; bottom: 100px; left: 0; background: var(--tab-color); 
+            width: 30px; height: 60px; border-radius: 0 8px 8px 0; z-index: 950;
+            display: none; align-items: center; justify-content: center; cursor: pointer;
+            border: 1px solid #ccc; border-left: none; font-size: 1.2rem;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-content { 
+    padding: 20px; 
+    /* 移除原本的位移轉場，改用透明度轉場 */
+    transition: opacity 0.5s ease; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+        .sub-group { display: none; }
+        .active-group { display: block; }
+        .page-content { display: none; }
+        .active-page, .home-active, .sub-index-active { display: block; animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* --- 777777 角色模板樣式整合 --- */
+        .profile-container {margin-top: 60px !important; /* 將內容向下推 80px，為 70px 的按鈕留出呼吸空間 */
+    position: relative; background: #fff; max-width: 600px; width: 100%; padding: 50px 40px; border: 1px solid #eee; box-shadow: 0 15px 50px rgba(0,0,0,0.05); margin: 0 auto; box-sizing: border-box; }
+        .profile-header { text-align: center; margin-bottom: 40px; }
+        
+/* 修正後的頭像基礎樣式 */
+.diamond-avatar, .avatar-circle {
+    width: 130px; 
+    height: 130px;
+    margin: 0 auto 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none !important; /* 移除容器背景 */
+    border: none !important;     /* 移除外邊框線 */
+    overflow: visible !important;
+}
+
+/* 這是負責顯示邊框顏色的底層 */
+.diamond-avatar::before, .avatar-circle::before {
+    content: "";
+    position: absolute;
+    top: -4px; /* 控制邊框粗細，數字越大邊框越粗 */
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    /* 關鍵：讀取變數 --highlight，並加上 !important 確保不被預設綠色蓋掉 */
+    background-color: var(--highlight) !important; 
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    z-index: 1;
+}
+
+/* 內層圖片 */
+.diamond-avatar img, .avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    position: relative;
+    z-index: 2;
+    background: #2a2a2e;
+}
+
+/* 角色頁面的大頭像尺寸調整 */
+.avatar-circle {
+    width: 180px;
+    height: 180px;
+}
+
+
+
+/* 針對首頁 (Char-grid) 的菱形 */
+.char-grid .diamond-avatar {
+    width: 130px; /* 確保寬度 */
+    height: 130px; /* 確保高度 */
+    position: relative;
+    overflow: visible; /* 關鍵：必須設為 visible 邊框才不會被切掉 */
+    background: none !important;
+}
+
+/* 確保圖片正確裁切並浮在上面 */
+.char-grid .diamond-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    position: relative;
+    z-index: 2;
+}
+
+/* 這是首頁的邊框色塊 */
+.char-grid .diamond-avatar::before {
+    content: "";
+    position: absolute;
+    top: -4px;   /* 邊框粗細 */
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background-color: var(--highlight); /* 這裡設定首頁的顏色 */
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    z-index: 1;
+}
+
+/* 造物／人類區塊：金色邊框 */
+.char-grid .gold-diamond::before {
+    background-color: #e2c792;
+}
+.char-grid .gold-diamond {
+    filter:
+        drop-shadow(2px 0 0 #e2c792)
+        drop-shadow(-2px 0 0 #e2c792)
+        drop-shadow(0 2px 0 #e2c792)
+        drop-shadow(0 -2px 0 #e2c792);
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* --- 全縣市菱形邊框顏色設定 --- */
+
+/* 台北市 - 水藍色 */
+#tp, #r-taipei { --highlight: #242C56; }
+
+/* 新北市 - 橘黃色 */
+#ntp, #r-new-taipei { --highlight: #B98831; }
+
+/* 桃園市 - 櫻花粉 */
+#ty, #r-taoyuan { --highlight: #FF6B6B; }
+
+/* 台中市 - 湖水綠 */
+#tc, #r-taichung { --highlight: #4ECDC4; }
+
+/* 藍日教人造神 - 聖光金 */
+#r-blue-sun { --highlight: #E2C792; }
+#r-blue-sun .diamond-avatar::before, #r-blue-sun .avatar-circle::before { background-color: #E2C792 !important; }
+}
+
+
+/* 首頁角色展示網格 */
+.char-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 手機並排 2 個 */
+    gap: 30px 15px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (min-width: 800px) {
+    .char-grid { grid-template-columns: repeat(4, 1fr); } /* 電腦並排 4 個 */
+}
+
+.char-item { text-align: center; cursor: pointer; transition: transform 0.3s ease; }
+.char-item:hover { transform: translateY(-5px); }
+.char-grid .diamond-avatar { width: 100px; height: 100px; } /* 首頁縮小一點 */
+.char-label { font-size: 0.9rem; color: var(--main-color); margin-top: 10px; letter-spacing: 2px; }
+
+/* 修改後的城市名稱容器：確保垂直排列並置中 */
+.city-name {
+    font-size: 2.5rem;
+    margin: 10px 0 5px 0;
+    color: #3E4644;
+    letter-spacing: 2px;
+    display: flex;         /* 使用 Flexbox */
+    flex-direction: column; /* 讓中文在上、英文在下 */
+    align-items: center;    /* 水平置中 */
+    justify-content: center;
+    line-height: 1.2;
+}
+
+/* 英文部分的細節調整：更小、更透明 */
+.city-name span.en-name {
+    font-size: 0.9rem;    /* 字體調小 */
+    color: rgba(170, 170, 170, 0.6); /* 使用 rgba 控制透明度 (0.6) */
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-left: 0;       /* 移除左邊距，確保絕對置中 */
+    margin-top: 5px;      /* 與中文保持一點間距 */
+    letter-spacing: 3px;
+}
+
+        .city-name span { font-size: 1.2rem; color: #aaa; text-transform: uppercase; font-weight: 300; margin-left: 10px; }
+        .rank-tag { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 4px; font-weight: bold; }
+        .section-title { font-size: 1.1rem; text-align: center; color: var(--accent-color); letter-spacing: 4px; margin: 40px 0 25px; position: relative; }
+        .section-title::after { content: ""; display: block; width: 30px; height: 2px; background: var(--highlight); margin: 10px auto 0; opacity: 0.8; }
+        .sub-section-label { font-size: 0.9rem; color: var(--highlight); text-align: center; margin-bottom: 20px; letter-spacing: 3px; font-weight: bold; }
+        .divider { height: 1px; background: linear-gradient(to right, transparent, #ddd, transparent); margin: 40px 0; }
+        .intro-text { font-style: italic; line-height: 1.8; color: #555; text-align: center; margin-bottom: 30px; }
+        .detail-item { margin-bottom: 15px; font-size: 1rem; line-height: 1.6; text-align: left; }
+        .detail-item strong { color: #222; margin-right: 10px; }
+        .stat-row { display: flex; align-items: center; margin-bottom: 20px; }
+        .stat-label { width: 80px; font-size: 0.85rem; color: #666; font-weight: bold; }
+        .stat-bar-bg { flex: 1; height: 6px; background: var(--progress-bg); border-radius: 3px; margin: 0 15px; overflow: hidden; }
+        .stat-bar-fill { height: 100%; background: var(--highlight) !important; 
+    width: 0;
+    transition: width 1.5s ease-out;
+} width: 0; transition: width 1.5s ease-out; }
+        .stat-value { width: 40px; text-align: right; font-size: 0.85rem; color: #aaa; }
+        .image-box { text-align: center; margin-bottom: 40px; }
+        .image-box img { max-width: 100%; height: auto; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .img-caption { margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); letter-spacing: 1px; }
+        .slider-container { position: relative; display: flex; align-items: center; background: #fafafa; padding: 10px 0; }
+        .slider-wrapper { flex: 1; overflow: hidden; }
+        .slider-content { display: flex; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide { min-width: 100%; text-align: center; }
+        .slider-btn { background: none; border: none; font-size: 1.5rem; color: #ccc; padding: 0 10px; cursor: pointer; transition: 0.3s; z-index: 10; }
+        .slider-btn:hover { color: var(--highlight); }
+
+        /* 設定輪播：容器高度跟著圖片原始比例自適應 */
+        .setting-slider {
+            background: transparent;
+            padding: 8px 0;
+        }
+        .setting-slider .slider-wrapper {
+            transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .setting-slider .slider-content {
+            align-items: flex-start; /* 不強制等高 */
+        }
+        .setting-slider .slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .setting-slider .slide img {
+            width: 100%;
+            height: auto;
+            max-width: 420px;  /* 橫版圖限制最大寬 */
+            display: block;
+            margin: 0 auto;
+        }
+
+/* 首頁角色展示區網格 */
+.char-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 手機預設並排 2 個 */
+    gap: 30px 15px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 電腦版自動切換為並排 4 個 */
+@media (min-width: 800px) {
+    .char-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* 菱形外框容器 */
+.char-item {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.char-item:hover {
+    transform: translateY(-5px);
+}
+
+/* 菱形頭像實現 */
+.diamond-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px;
+    background: var(--accent-color);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--highlight);
+}
+
+.diamond-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.char-label {
+    font-size: 0.9rem;
+    color: var(--main-color);
+    letter-spacing: 2px;
+}
+
+
+/* 名詞解釋專用樣式 */
+/* 修改名詞解釋容器，移除邊框改用更簡約的風格 */
+.lore-container {
+    margin-top: 60px !important; /* 將內容向下推 80px，為 70px 的按鈕留出呼吸空間 */
+    position: relative;
+    background: #fff;
+    max-width: 800px;
+    margin: 10px auto;
+    padding: 30px 20px; /* 縮減手機端的內邊距 */
+    border-left: 4px solid var(--accent-color);
+    box-shadow: none; /* 手機端建議取消陰影，更清爽 */
+}
+
+/* 主定義框：像檔案摘要一樣的感覺 */
+.lore-main-concept {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #444;
+    background: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #eee;
+    margin-bottom: 30px;
+    font-style: italic; /* 增加引言感 */
+}
+
+/* 子項目區塊：增加左側裝飾線 */
+.sub-concept-box {
+    margin-top: 25px;
+    padding-left: 15px;
+    border-left: 1px solid #ddd;
+}
+
+/* 條列式重點標題 */
+.sub-concept-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    color: var(--highlight);
+    margin-bottom: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.sub-concept-title::before {
+    content: "◈";
+    margin-right: 8px;
+    font-size: 0.8rem;
+}
+
+/* 詳細敘述：讓它稍微縮進，與標題區分 */
+.sub-concept-content {
+    white-space: pre-wrap; /* 加入這一行，內容中的 Enter 就會生效 */
+    padding-left: 5px;
+    line-height: 1.7;
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+/* 自定義縮小字體的樣式 */
+.text-small {
+    font-size: 0.75rem; /* 數字越小字越小，例如 0.6rem 會更小 */
+    color: #888;       /* 順便讓顏色變淺，看起來更有備註感（可選） */
+}
+
+        /* ====== 新版索引介面樣式 ====== */
+        .new-index-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 20px 16px 60px;
+        }
+        .new-index-hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1.5px solid #c8d8d5;
+            border-left: none;
+            border-right: none;
+            padding: 28px 24px 24px 60px;
+            margin-bottom: 30px;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+            box-shadow: 0 2px 12px rgba(36,109,94,0.06);
+        }
+        /* 五邊形裝飾線：比主體稍大，形成描邊效果 */
+        .new-index-hero::before {
+            content: "";
+            position: absolute;
+            inset: -4px;
+            background: #ffffff;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+            z-index: -1;
+            opacity: 0.55;
+        }
+        /* 第二層裝飾線：再往外一點，顏色更淡 */
+        .new-index-hero::after {
+            content: "";
+            position: absolute;
+            inset: -8px;
+            background: #ffffff;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+            z-index: -2;
+            opacity: 0.18;
+        }
+        .new-index-hero-diamond {
+            position: absolute;
+            left: -14px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 28px;
+            height: 28px;
+            background: #54A39C;
+            box-shadow: 3px 3px 0 #54A3;
+        }
+        .new-index-hero-text { flex: 1; }
+        .new-index-main-title {
+            font-size: 2rem;
+            color: var(--main-color);
+            margin: 0 0 4px 0;
+            letter-spacing: 4px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .new-index-sub-title {
+            font-size: 0.78rem;
+            color: #aaa;
+            letter-spacing: 2px;
+            margin: 6px 0 0 0;
+        }
+        .new-index-hero-arrow { font-size: 1rem; color: #bbb; margin-right: 10px; }
+        .new-index-divider-label {
+            font-size: 0.72rem;
+            color: #bbb;
+            letter-spacing: 4px;
+            text-align: center;
+            margin: 28px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .new-index-divider-label::before, .new-index-divider-label::after {
+            content: ""; flex: 1; height: 1px; background: #e0e0e0;
+        }
+        .new-index-section { margin-bottom: 10px; }
+        .new-index-l1 {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border: 1.5px solid #dde8e6;
+            padding: 16px 50px 16px 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .new-index-l1:hover, .new-index-l1.open { border-color: #4D7F93; background: #f0f6f9; }
+        .new-index-l1-label { font-size: 1.05rem; color: var(--main-color); letter-spacing: 3px; font-weight: 600; }
+        .new-index-corner-deco {
+            position: absolute; top: 0; right: 0;
+            width: 0; height: 0; border-style: solid;
+            border-width: 0 32px 32px 0;
+            border-color: transparent #5b8fa8 transparent transparent;
+            transition: border-color 0.25s;
+        }
+        .new-index-l1:hover .new-index-corner-deco, .new-index-l1.open .new-index-corner-deco {
+            border-color: transparent #4D7F93 transparent transparent;
+        }
+        .new-index-l1-arrow {
+            font-size: 0.7rem; color: #bbb;
+            transition: transform 0.3s ease;
+            position: absolute; right: 18px;
+        }
+        .new-index-l1.open .new-index-l1-arrow { transform: rotate(90deg); color: #4D7F93; }
+        .new-index-l2-group { max-height: 0; overflow: hidden; transition: max-height 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease; opacity: 0; }
+        .new-index-l2-group.open { opacity: 1; }
+        .new-index-l2 {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #fafafa; border: 1px solid #e8e8e8; border-top: none;
+            padding: 13px 44px 13px 32px; cursor: pointer;
+            font-size: 0.95rem; color: #555; letter-spacing: 2px;
+            position: relative; transition: all 0.2s ease; text-decoration: none;
+        }
+        .new-index-l2:hover { background: #f0f6f9; color: #4D7F93; padding-left: 38px; }
+        .new-index-l2.open { color: #4D7F93; background: #eaf2f6; }
+        a.new-index-l2-direct { color: #555; }
+        a.new-index-l2-direct:hover { color: #4D7F93; }
+        .new-index-l2-arrow {
+            width: 18px; height: 18px; color: #ccc;
+            position: absolute; right: 16px;
+            transition: color 0.2s, transform 0.3s; flex-shrink: 0;
+        }
+        .new-index-l2.open .new-index-l2-arrow { color: #4D7F93; transform: rotate(45deg); }
+        .new-index-l2:hover .new-index-l2-arrow { color: #4D7F93; }
+        .new-index-l3-group { max-height: 0; overflow: hidden; transition: max-height 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.24s ease; display: flex; flex-wrap: wrap; opacity: 0; }
+        .new-index-l3-group.open { opacity: 1; }
+        .new-index-l3 {
+            display: block; flex: 1 1 calc(50% - 0px); min-width: 120px;
+            padding: 11px 16px 11px 50px;
+            background: #f7f7f7; border: 1px solid #efefef; border-top: none;
+            font-size: 0.875rem; color: #777; letter-spacing: 1.5px;
+            text-decoration: none; transition: all 0.2s ease; position: relative;
+        }
+        .new-index-l3::before { content: "—"; position: absolute; left: 30px; color: #ddd; font-size: 0.75rem; }
+        .new-index-l3:hover { background: #eaf2f6; color: #4D7F93; padding-left: 55px; }
+        .new-index-l3:hover::before { color: #4D7F93; }
+        @media (max-width: 480px) { .new-index-l3 { flex: 1 1 100%; } .new-index-main-title { font-size: 1.6rem; } }
+        /* ====== 結束新版索引樣式 ====== */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes charEnter {
+            from { opacity: 0; transform: translateY(14px) scale(0.93); }
+            to   { opacity: 1; transform: translateY(0)   scale(1); }
+        }
+        .char-item.entering {
+            animation: charEnter 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+        }
+        @keyframes pageEnter { 
+            from { opacity: 0; transform: translateY(18px); } 
+            to   { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes lineFlicker {
+            0%,100% { opacity:1; color:#00ff41; }
+            50%      { opacity:0.05; color:#ffffff; }
+        }
+        #glitch-overlay.active { /* 背景不動 */ }
+        @keyframes glitchTextShake {
+            0%,100% { transform: none; }
+            15%     { transform: translateX(-3px) skewX(-1deg); }
+            30%     { transform: translateX(2px) skewX(1.5deg); }
+            45%     { transform: translateX(-1px); }
+            60%     { transform: translateX(3px) skewX(-0.5deg); }
+            75%     { transform: translateX(-2px); }
+        }
+        #glitch-overlay.active #glitch-content {
+            animation: glitchTextShake 0.18s steps(1) infinite;
+        }
+        @keyframes skeletonPulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
+        .grid-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: #bbb;
+            padding: 18px 0;
+            animation: skeletonPulse 1.2s ease-in-out infinite;
+        }
+        .active-page { display: block; animation: pageEnter 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+        .home-active, .sub-index-active { display: block; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        /* Q&A 摺疊區域整體容器 */
+.lore-qa-section {
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.qa-group-title {
+    font-size: 0.85rem;
+    color: #bbb;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* 摺疊組件 */
+.qa-item {
+    border-bottom: 1px solid #f0f0f0; /* 淺灰色細分隔線 */
+    padding: 10px 0;
+}
+
+.qa-item summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #666;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.qa-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.qa-item summary:hover {
+    color: var(--highlight);
+}
+
+/* 展開後的問號符號 */
+.qa-item summary::before {
+    content: "Q.";
+    margin-right: 10px;
+    font-weight: bold;
+    color: #ddd;
+}
+
+/* 展開內容（答案）樣式 */
+.qa-content {
+    padding: 12px 10px 10px 28px;
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+.qa-content::before {
+    content: "A.";
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    color: #eee;
+}
+
+.qa-item[open] summary {
+    color: var(--highlight);
+    margin-bottom: 5px;
+}
+
+/* ======================================================
+   其他 > Q&A 頁專用樣式（與世界圖鑑的 .qa-item 完全分離）
+   ── 想改外觀只需調整這個區塊 ──
+   主要可調整的顏色變數：
+     --oqa-bg          頁面背景色          目前：#fafaf8（米白）
+     --oqa-border      分隔線顏色          目前：#e8e4de
+     --oqa-q-color     Q 問題文字顏色      目前：#4D7F93（青藍）
+     --oqa-q-marker    Q. 符號顏色         目前：#9dc4d0（淡青）
+     --oqa-a-color     A 答案文字顏色      目前：#5a5a5a（深灰）
+     --oqa-a-marker    A. 符號顏色         目前：#c5d8d5（淡綠灰）
+     --oqa-title-color 標題顏色            目前：#3E4644
+   ====================================================== */
+.oqa-container {
+    background: #fafaf8;           /* ← 頁面背景色 */
+    border-left: 4px solid #c5d8d5;
+    padding: 28px 24px 36px;
+    max-width: 720px;
+    margin: 60px auto 10px;        /* 上方 60px 為返回鍵留空間 */
+}
+.oqa-title {
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    color: #3E4644;                /* ← 標題顏色 */
+    text-align: center;
+    margin-bottom: 6px;
+}
+.oqa-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 28px;
+}
+.oqa-item {
+    border-bottom: 1px solid #e8e4de;  /* ← 分隔線 */
+    padding: 14px 0;
+}
+.oqa-item summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #4D7F93;                /* ← 問題文字顏色 */
+    font-weight: 600;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.2s;
+}
+.oqa-item summary::-webkit-details-marker { display: none; }
+.oqa-item summary:hover { opacity: 0.75; }
+.oqa-item summary::before {
+    content: "Q.";
+    font-size: 1rem;
+    font-weight: 700;
+    color: #9dc4d0;                /* ← Q. 符號顏色 */
+    flex-shrink: 0;
+}
+.oqa-answer {
+    position: relative;
+    padding: 12px 8px 6px 36px;
+    font-size: 0.93rem;
+    color: #5a5a5a;                /* ← 答案文字顏色 */
+    line-height: 1.85;
+}
+.oqa-answer::before {
+    content: "A.";
+    position: absolute;
+    left: 8px;
+    top: 12px;
+    font-weight: 700;
+    color: #c5d8d5;                /* ← A. 符號顏色 */
+}
+/* ====== end of Q&A 樣式 ====== */
+
+/* ====== 返回選單浮動按鈕 ====== */
+#back-to-menu-btn {
+    display: none; 
+    position: absolute; 
+    top: 65px;         /* 維持在 Header 下方一點 */
+    left: 15px;        
+    z-index: 980;
+    width: 70px;       /* 設定寬度 70px */
+    height: 70px;      /* 設定高度 70px */
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+#back-to-menu-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#back-to-menu-btn:hover {
+    transform: scale(1.1);
+    opacity: 0.85;
+}
+
+/* 捲動後的浮動狀態 */
+#back-to-menu-btn.floating {
+    position: fixed;
+    top: 12px;
+    filter: drop-shadow(0 2px 8px rgba(77,127,147,0.45));
+    transition: top 0.3s ease, filter 0.3s ease;
+}
+#back-to-menu-btn.floating img {
+    filter: drop-shadow(0 0 6px rgba(77,127,147,0.6));
+}
+
+    
+        /* ── 圖片保護 ── */
+        img {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none; /* iOS 長按選單 */
+            pointer-events: none;        /* 透明遮罩效果：點擊穿透到下層 */
+        }
+        /* 但輪播按鈕等可互動元素要恢復 */
+        .slider-btn, button, a, [onclick] {
+            pointer-events: auto;
+        }
+        /* 圖片容器加相對定位，方便加偽元素遮罩 */
+        .image-box, .slider-wrapper, .avatar-circle, .diamond-avatar {
+            position: relative;
+        }
+        .image-box::after, .slider-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+        }
+
+        /* ── 設定輪播：解除保護、允許點擊放大與下載 ── */
+        .setting-slider .setting-slide img {
+            pointer-events: auto !important;
+            -webkit-touch-callout: default !important;
+            user-select: auto !important;
+            cursor: zoom-in;
+        }
+        /* 設定輪播的 slider-wrapper 不加遮罩、確保高度正常 */
+        .setting-slider .slider-wrapper::after { display: none !important; }
+        .setting-slider .slider-wrapper { overflow: hidden; }
+
+        /* ── Lightbox ── */
+        #lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+        #lightbox-overlay.open { display: flex; }
+        #lightbox-img {
+            max-width: 92vw;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 2px;
+            pointer-events: auto;
+            -webkit-touch-callout: default;
+            user-select: auto;
+            cursor: zoom-out;
+        }
+        #lightbox-close {
+            position: absolute;
+            top: 18px; right: 22px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        #lightbox-close:hover { opacity: 1; }
+        #lightbox-hint {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.45);
+        }
+</style>
+</head>
+<body>
+<!-- Lightbox：設定圖放大檢視 -->
+<div id="lightbox-overlay" onclick="closeLightbox()">
+    <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+    <img id="lightbox-img" src="" alt="設定圖" onclick="event.stopPropagation()">
+</div>
+
+<div id="topMenu" class="top-menu-overlay">
+    <button style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:2rem;" onclick="closeTopMenu()">✕</button>
+    <a href="#" onclick="goHome(); closeTopMenu();">⋄ 首頁 ⋄</a>
+    <div class="menu-divider"></div>
+    <a href="#" onclick="switchMajorCategory('world-group', 'world-index', '世界')">⋄ 世界 ⋄</a>
+    <a href="#" onclick="switchMajorCategory('char-group', 'char-index', '角色')">⋄ 角色 ⋄</a>
+    <a href="#" onclick="switchMajorCategory('other-group', 'other-index', '其他')">⋄ 其他 ⋄</a>
+    <div class="menu-divider"></div>
+    <a href="#" onclick="switchMajorCategory('aboutauthor-group', 'about-index', '關於作者')">⋄ 關於作者 ⋄</a>
+</div>
+
+
+<header>
+    <div id="current-category-title" onclick="goHome()">
+        <img src="https://i.ibb.co/B521qPfT/IMG-5993.png" alt="Logo" id="header-logo">
+    </div>
+    <button style="background:none; border:none; font-size:1.8rem;" onclick="openTopMenu()">☰</button>
+</header>
+
+<!-- 返回選單浮動按鈕 -->
+<button id="back-to-menu-btn" onclick="goBackToMenu()" title="返回選單">
+    <img id="back-btn-img" src="https://i.ibb.co/Swkxj5nx/IMG-6502.png" alt="返回選單">
+</button>
+
+
+<div class="main-content" id="main">
+    <div id="welcome-msg" class="home-active">
+        <div class="home-image-area">
+            <img src="https://i.ibb.co/p6C2k0Y4/20251211.png" alt="委託的封面。話說，你為什麼要長按/左鍵點擊呢？這裡的一切圖片均不可使用。">
+        </div>
+
+        <div class="home-text-content">
+        <div class="warning-statement">
+            蒼茫大海之上，小舟獨自漂泊。
+            <p>滿載旅人，航在無起無終的那方彼端。</p>
+            <p>歡迎來到「福爾摩沙」——</p>
+            <br>我們永恆的美麗之島。
+        </div>
+            
+        </div>
+        
+
+
+        <div class="divider" style="max-width: 80%; margin: 30px auto;"></div>
+        <div class="section-title">⋄ 推薦角色檔案 ⋄</div>
+
+        <div class="sub-section-label" style="letter-spacing:1px;">— 土地靈 —</div>
+        <div class="char-grid" id="grid-landspirit">
+            <div class="grid-loading" id="loading-landspirit">Loading…</div>
+        </div>
+
+        <div class="sub-section-label" style="margin-top:32px;letter-spacing:1px;">— 造物／人類 —</div>
+        <div class="char-grid" id="grid-artificial">
+            <div class="grid-loading" id="loading-artificial">Loading…</div>
+        </div>
+        <div class="divider" style="max-width: 60%; margin: 40px auto 20px;"></div>
+        <div class="warning-statement">
+            此為以現代、歷史台灣，
+            <br>以及周邊區域為藍本發想的半架空個人原創世界觀。
+            <br>其角色、宗教、政府體制、概念、學說、理論與歷史等
+            <br>皆為基於現實魔改的虛構產物，請勿代入現實。
+            <p>本網站所有圖片版權所有，禁止使用。<br>使用手機觀感更佳。<p>若有延遲、無法顯示等情形請嘗試稍後或重新開啟網頁。<br>若有bug請利用棉花糖回報。</p>
+            
+        </div>
+
+        
+        </div>
+        
+<div id="world-group" class="sub-group">
+        <div id="world-index" class="page-content sub-index-active">
+            <!-- 新版精美索引介面 -->
+            <div class="new-index-wrapper">
+                <div class="new-index-hero">
+                    <div class="new-index-hero-diamond"></div>
+                    <div class="new-index-hero-text">
+                        <h1 class="new-index-main-title">世界圖鑑</h1>
+                        <p class="new-index-sub-title">World Archives</p>
+                    </div>
+                </div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'world-s1')">
+                        <span class="new-index-l1-label">名詞解釋</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="world-s1">
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s1-1')">
+                            <span>世界</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s1-1">
+                            <a href="#" class="new-index-l3" onclick="showPage('w-surface-formosa')">表福爾摩沙</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('w-inner-formosa')">裡福爾摩沙</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s1-2')">
+                            <span>基礎概念</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s1-2">
+                            <a href="#" class="new-index-l3" onclick="showPage('w-aura')">靈氣</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('w-power')">神息</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('w-crack')">裂縫</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s1-3')">
+                            <span>靈體</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s1-3">
+                            <a href="#" class="new-index-l3" onclick="showPage('w-landspirit')">土地靈</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('w-regspirit')">區域土地靈</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s1-4')">
+                            <span>教廷政府</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s1-4">
+                            <a href="#" class="new-index-l3" onclick="showPage('w-gov-sys')">政府制度</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('w-vessel')">人造軀殼</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s1-5')">
+                            <span>人造宗教</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s1-5">
+                            <a href="#" class="new-index-l3" onclick="showPage('w-rel-sys')">人造宗教制度</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('w-god')">人造神</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'world-s2')">
+                        <span class="new-index-l1-label">團體</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="world-s2">
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s2-1')">
+                            <span>政府</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s2-1">
+                            <a href="#" class="new-index-l3" onclick="showPage('g-vatican')">教廷政府</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'world-s2-2')">
+                            <span>知名人造宗教</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="world-s2-2">
+                            <a href="#" class="new-index-l3" onclick="showPage('r-blue-sun')">藍日教</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('r-green-cross')">綠十字教</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    
+    
+    
+
+
+
+
+
+    
+
+
+    </div>
+
+    <div id="char-group" class="sub-group">
+        <div id="char-index" class="page-content sub-index-active">
+
+
+            <!-- 新版精美索引介面 - 角色 -->
+            <div class="new-index-wrapper">
+                <div class="new-index-hero">
+                    <div class="new-index-hero-diamond"></div>
+                    <div class="new-index-hero-text">
+                        <h1 class="new-index-main-title">角色圖鑑</h1>
+                        <p class="new-index-sub-title">Character Archives</p>
+                    </div>
+                </div>
+
+                <div class="new-index-divider-label">土地靈</div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'char-s1')">
+                        <span class="new-index-l1-label">土地靈</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="char-s1">
+                        <a href="#" class="new-index-l2 new-index-l2-direct" onclick="showPage('c-mvythzh')">
+                            <span>绂忕埦鎽╂矙</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'char-s2')">
+                        <span class="new-index-l1-label">區域土地靈</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="char-s2">
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s2-1')">
+                            <span>「六都」</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s2-1">
+                            <a href="#" class="new-index-l3" onclick="showPage('tp')">台北</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('ntp')">新北</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('ty')">桃園</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('tc')">台中</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('tn')">台南</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('kh')">高雄</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s2-2')">
+                            <span>北部</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s2-2">
+                            <a href="#" class="new-index-l3" onclick="showPage('kl')">基隆</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('hsc')">新竹縣</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('hsi')">新竹市</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('il')">宜蘭</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s2-3')">
+                            <span>中部</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s2-3">
+                            <a href="#" class="new-index-l3" onclick="showPage('ml')">苗栗</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('ch')">彰化</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('yl')">雲林</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('nt')">南投</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s2-4')">
+                            <span>南部</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s2-4">
+                            <a href="#" class="new-index-l3" onclick="showPage('cyc')">嘉義縣</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('cyi')">嘉義市</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('pt')">屏東</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('ph')">澎湖</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s2-5')">
+                            <span>東部</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s2-5">
+                            <a href="#" class="new-index-l3" onclick="showPage('hl')">花蓮</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('tt')">台東</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s2-6')">
+                            <span>離島</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s2-6">
+                            <a href="#" class="new-index-l3" onclick="showPage('km')">金門</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('lj')">連江</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="new-index-divider-label">人造軀殼</div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'char-s3')">
+                        <span class="new-index-l1-label">國家級人造軀殼</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="char-s3">
+                        <a href="#" class="new-index-l2 new-index-l2-direct" onclick="showPage('c-kuhua')">
+                            <span>紺華</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="new-index-divider-label">人造神</div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'char-s4')">
+                        <span class="new-index-l1-label">藍日教</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="char-s4">
+                        <a href="#" class="new-index-l2 new-index-l2-direct" onclick="showPage('c-k22')">
+                            <span>K_22</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'char-s5')">
+                        <span class="new-index-l1-label">綠十字教</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="char-s5">
+                        <a href="#" class="new-index-l2 new-index-l2-direct" onclick="showPage('c-d26')">
+                            <span>D_26</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="new-index-divider-label">創教教主</div>
+
+                <div class="new-index-section">
+                    <div class="new-index-l1" onclick="toggleNewSection(this, 'char-s6')">
+                        <span class="new-index-l1-label">創教教主</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </div>
+                    <div class="new-index-l2-group" id="char-s6">
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s6-1')">
+                            <span>藍日教</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s6-1">
+                            <a href="#" class="new-index-l3" onclick="showPage('c-blue-founder1')">「昭」</a>
+                            <a href="#" class="new-index-l3" onclick="showPage('c-blue-founder2')">「望」</a>
+                        </div>
+                        <div class="new-index-l2" onclick="toggleNewSection(this, 'char-s6-2')">
+                            <span>綠十字教</span>
+                            <svg class="new-index-l2-arrow" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7v10H7" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        </div>
+                        <div class="new-index-l3-group" id="char-s6-2">
+                            <a href="#" class="new-index-l3" onclick="showPage('c-green-founder')">「霖」</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="c-mvythzh" class="page-content">
+            <div id="mvythzh-lock" style="display:flex; flex-direction:column; align-items:center; margin:40px auto; padding:0; max-width:380px; width:92%; box-sizing:border-box;">
+
+                <!-- 謎語區 -->
+                <div style="width:100%; border:1px dashed #ccc; background:rgba(255,255,255,0.55); padding:28px 24px 24px; box-sizing:border-box; text-align:center;">
+                    <div style="font-size:0.82rem; color:#888; line-height:2; font-style:italic;">
+                        你於折射出不同光彩的碎片中窺見了什麼？<br>
+                        22枚分身。在旅途中收集一切，並牢記於心。<br>
+                        牽引它們回到這裡，你必前行在正確的道路上。<p>不妨也試著踏足空白與臆想之路吧，或許會得到意想不到的結果。</p>
+                    </div>
+                </div>
+
+                <!-- 旅途進程條 / 集齊後變取得密碼 -->
+                <div id="mvy-progress-section" style="width:100%; padding:14px 24px 12px; background:rgba(248,246,242,0.8); border:1px solid #e8e2da; border-top:none; box-sizing:border-box;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px;">
+                        <span style="font-size:0.68rem; color:#b0a898; letter-spacing:2px;">旅途進程</span>
+                        <span id="mvy-progress-label" style="font-size:0.68rem; color:#c0b8ae;">0 / 22</span>
+                    </div>
+                    <div style="width:100%; height:3px; background:#e5e0d8; border-radius:2px; overflow:hidden;">
+                        <div id="mvy-progress-bar" style="height:100%; width:0%; background:#8aaba4; border-radius:2px; transition:width 0.5s ease;"></div>
+                    </div>
+                </div>
+
+                <!-- 取得密碼提示（集齊後取代進度條） -->
+                <div id="mvy-unlock-hint" style="display:none; width:100%; padding:12px 24px; background:#f0f5f3; border:1px solid #c8dbd7; border-top:none; box-sizing:border-box; text-align:center;">
+                    <span style="font-size:0.7rem; color:#7a9a7a; letter-spacing:1px;">✦ 旅途完成 ✦</span><br>
+                    <span id="mvy-copy-btn" onclick="copyMvyPassword()" style="font-size:0.72rem; color:#8aaba4; cursor:pointer; border-bottom:1px dotted #8aaba4; display:inline-block; margin-top:6px; pointer-events:auto; user-select:none; letter-spacing:1px;">
+                        點擊此處取得密碼
+                    </span>
+                </div>
+
+                <!-- 輸入區 -->
+                <div style="width:100%; padding:24px 24px 28px; background:rgba(255,255,255,0.4); border:1px solid #ddd; border-top:none; box-sizing:border-box; display:flex; flex-direction:column; align-items:center;">
+                    <input type="password" id="mvy-pass" style="width:100%; padding:11px 14px; border:1px solid #c8c0b4; text-align:center; font-family:inherit; font-size:0.9rem; background:rgba(255,255,255,0.8); box-sizing:border-box; letter-spacing:3px; outline:none;" placeholder="CODE">
+                    <button onclick="checkMvyPassword()" style="margin-top:10px; padding:7px 24px; background:#3E4644; color:#f0ebe3; border:none; cursor:pointer; font-family:inherit; font-size:0.75rem; letter-spacing:3px;">驗 證</button>
+                    <p id="mvy-error" style="color:#a55; font-size:0.75rem; margin-top:12px; display:none; letter-spacing:1px;">密碼錯誤/驗證錯誤。請重新點擊驗證。</p>
+                </div>
+
+            </div>
+            <div id="mvythzh-content" style="display:none; animation:fadeIn 1s ease;">
+                <p>解鎖後的隱藏設定內容...</p>
+            </div>
+        </div>
+
+    </div><!-- /char-group -->
+
+    <div id="other-group" class="sub-group">
+        <div id="other-index" class="page-content sub-index-active">
+            <div class="new-index-wrapper">
+                <div class="new-index-hero">
+                    <div class="new-index-hero-diamond"></div>
+                    <div class="new-index-hero-text">
+                        <h1 class="new-index-main-title">其他</h1>
+                        <p class="new-index-sub-title">Other</p>
+                    </div>
+                </div>
+
+                <div class="new-index-divider-label">Q&amp;A</div>
+
+                <div class="new-index-section">
+                    <a href="#" class="new-index-l1" onclick="showPage('other-qa-world'); return false;">
+                        <span class="new-index-l1-label">世界觀</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </a>
+                </div>
+
+                <div class="new-index-section">
+                    <a href="#" class="new-index-l1" onclick="showPage('other-qa-web'); return false;">
+                        <span class="new-index-l1-label">網頁</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </a>
+                </div>
+
+                <div class="new-index-section">
+                    <a href="#" class="new-index-l1" onclick="showPage('other-qa-doujin'); return false;">
+                        <span class="new-index-l1-label">同人</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">▶</span>
+                    </a>
+                </div>
+
+                <div class="new-index-divider-label">外部連結</div>
+
+                <div class="new-index-section">
+                    <!-- ↓ 賣貨便連結：把 href="#" 換成你的賣貨便賣場網址 -->
+                    <a href="https://myship.7-11.com.tw/general/detail/GM2603105460288" target="_blank" rel="noopener" class="new-index-l1">
+                        <span class="new-index-l1-label">通販賣場（賣貨便）</span>
+                        <div class="new-index-corner-deco"></div>
+                        <span class="new-index-l1-arrow">↗</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="other-qa-world" class="page-content">
+            <div class="oqa-container">
+                <h1 class="oqa-title">⋄ 世界觀 Q&amp;A ⋄</h1>
+                <p class="oqa-subtitle">WORLD / Q&amp;A</p>
+
+                <!-- ★ 世界觀 Q&A 第 1 題 ── 問題/答案請自行填寫 -->
+                <details class="oqa-item">
+                    <summary>你的世界觀怎麼想出來的？</summary>
+                    <div class="oqa-answer">我小時候就非常喜歡看各種國家擬人作品，導致現在成為了擬人腦（？）<br>同時，身為一個熱愛歷史的台灣人，我也對台灣本身的歷史以及為何走到今天的原因深深著迷。<br>我認為「台灣人的自我認同」這個一輩子都解不開的謎題，這本身帶來的混亂感實在是太吸引我了……<br><strong>跨越無數對立，忘卻所有紛爭，我們究竟是為何走到今天這個地步？</strong><br>自2022年起，我就發佈了第一張關於「台北」擬人的創作，最後不斷增加腦洞成為了一個相當具有規模的世界觀。</div>
+                </details>
+
+                <!-- ★ 世界觀 Q&A 第 2 題 -->
+                <details class="oqa-item">
+                    <summary>世界觀的歷史有遵循現實嗎？</summary>
+                    <div class="oqa-answer">有，但不多……<br>在這個世界當中，科技在過早的時間點取得了進步，同時加上「靈氣」的存在，因而導致了一系列與你所知略有不同的歷史誕生。<br>某些人物有參考現實歷史的部分，但他們並不完全相同，甚至可以說是天差地遠。例如：部分行為在現實中並非一人造成，但在故事中是一人造成。<br><strong>請不要完全代入現實，借鑒≠相同。</strong><br>根據故事需要，這些人物可能會創造出不同你所知的歷史故事。</div>
+                </details>
+
+                <!-- ★ 世界觀 Q&A 第 3 題 -->
+                <details class="oqa-item">
+                    <summary>為什麼沒有一個具體的時間線？</summary>
+                    <div class="oqa-answer">考量到作品本身半架空性質以及奇幻的部分，故事在我的敘述中通常會只有前後因果，沒有具體的時間。<br>基本上各種紀年方式與現實無異，但由於故事需要可能會拋棄一切對於年份的嚴謹性！請見諒……</div>
+                </details>
+
+            </div>
+        </div>
+        <div id="other-qa-doujin" class="page-content">
+            <div class="oqa-container">
+                <h1 class="oqa-title">⋄ 同人 Q&amp;A ⋄</h1>
+                <p class="oqa-subtitle">DOUJIN / Q&amp;A</p>
+
+                <!-- ★ 同人 Q&A 第 1 題 ── 問題/答案請自行填寫 -->
+                <details class="oqa-item">
+                    <summary>我可以製作同人嗎？</summary>
+                    <div class="oqa-answer">當！然！可！以！！<br>最喜歡同人了…最愛同人了…<br>基本上各種形式的同人（繪畫、文章、歌曲等等…）我都可以接受，請標明「福爾摩沙project」或是各種可辨識的縮寫。<br>也歡迎直接艾特我前往觀看你的作品哦！我會超級開心！！</div>
+                </details>
+
+                <!-- ★ 同人 Q&A 第 2 題 -->
+                <details class="oqa-item">
+                    <summary>有什麼不太建議的同人創作嗎？</summary>
+                    <div class="oqa-answer">基本上都可以，不過18+與血腥暴力同人必須做好防雷！<br>唯一需要注意的一點，不太能接受OC夢！請不要將他們當成夢角看待！</div>
+                </details>
+
+                <!-- ★ 同人 Q&A 第 3 題 -->
+                <details class="oqa-item">
+                    <summary>我和作者吃不一樣的cp，沒關係嗎？</summary>
+                    <div class="oqa-answer">其實在所有正劇的角色互動中，我並沒有設想非常具有cp向的互動，我所熱愛的「雙北」也僅隸屬於本家同人裡面，在正劇當中，她們僅有作為「親情」的愛。<br>身為前aph同人女，我自然也是非常理解雜食派的……</div>
+                </details>
+
+            </div>
+        </div>
+        <div id="other-qa-web" class="page-content">
+            <div class="oqa-container">
+                <h1 class="oqa-title">⋄ 網頁 Q&amp;A ⋄</h1>
+                <p class="oqa-subtitle">WEBSITE / Q&amp;A</p>
+
+                <!-- ★ 網頁 Q&A 第 1 題 ── 問題/答案請自行填寫 -->
+                <details class="oqa-item">
+                    <summary>為什麼我點進去要等一下才有東西？</summary>
+                    <div class="oqa-answer">我把大部分資料統整在另一處，需要等它跑一下。<br>（已經在叫竹妹修繕了！（嗯？）</div>
+                </details>
+
+                <!-- ★ 網頁 Q&A 第 2 題 -->
+                <details class="oqa-item">
+                    <summary>為什麼我加載到一半等不及跳出來又被傳回去/空白畫面了？</summary>
+                    <div class="oqa-answer">等……它……<br>不要太急著跳出來！太急著跳出來它還是會給你你一開始點的介面/空白畫面，同時返回鍵也會消失！</div>
+                </details>
+
+                <!-- ★ 網頁 Q&A 第 3 題 -->
+                <details class="oqa-item">
+                    <summary>你是用什麼做出這個網頁的？</summary>
+                    <div class="oqa-answer">html！<br>以及足夠撐過三個月不斷重複修改vibe coding和爆氣不做後的耐心……</div>
+                </details>
+
+            </div>
+        </div>
+    </div><!-- /other-group -->
+
+    <div id="aboutauthor-group" class="sub-group">
+        <div id="about-index" class="page-content sub-index-active">
+            <div class="new-index-wrapper" style="max-width:600px;">
+
+                <!-- 大頭像區塊 -->
+                <div style="display:flex; flex-direction:column; align-items:center; padding:5px 0 28px;">
+                    <div style="width:150px; height:150px; margin-bottom:22px; border-radius:50%; overflow:hidden; border: 3px solid #897C6E; flex-shrink:0;">
+                        <img src="https://i.ibb.co/xKCY7Xj0/IMG-20260228-143758-591.webp" alt="茶惟頭像"
+                             style="width:100%; height:100%; object-fit:cover; display:block;"
+                             onerror="this.src='https://via.placeholder.com/150/e8e4dc/5b8fa8?text=茶惟'">
+                    </div>
+                    <div style="font-size:1.6rem; letter-spacing:2px; color:var(--main-color); font-weight:700; margin-bottom:10px;">茶惟</div>
+                    <div style="font-size:0.9rem; color:#999; letter-spacing:2px; margin-bottom:18px; text-align:center; line-height:1.8;">作者<br>茶惟 | 茗和 | chawei<br>非商業委託/戳友請加fb<br>重大邀約請投以下信箱<br>—<br>委託暫停</div>
+                    <a href="https://lit.link/chaweiUwU" target="_blank" rel="noopener"
+                       style="display:inline-flex; align-items:center; gap:8px;
+                              padding:9px 24px; border:1.5px solid #c8d8d5; color:#5b8fa8;
+                              text-decoration:none; font-size:0.82rem; letter-spacing:2px;
+                              background:#fff; transition:all 0.22s ease;"
+                       onmouseover="this.style.background='#f0f6f9'; this.style.borderColor='#4D7F93';"
+                       onmouseout="this.style.background='#fff'; this.style.borderColor='#c8d8d5';">
+                        ⋄ 自介 ⋄
+                    </a>
+                </div>
+
+                <!-- 分隔線 -->
+                <div class="new-index-divider-label" style="margin-top:0;">匿名棉花糖</div>
+
+                <!-- 棉花糖連結 -->
+                <div class="new-index-section">
+                    <a href="https://marshmallow-qa.com/9e2mjbw70uc7smm?t=uxV1kd&utm_medium=url_text&utm_source=promotion" target="_blank" rel="noopener" class="about-ext-link">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-ext-label">棉花糖</span>
+                        <span class="about-ext-arrow">↗</span>
+                    </a>
+                </div>
+
+                <!-- 分隔線 -->
+                <div class="new-index-divider-label" style="margin-top:0;">社群</div>
+
+                <!-- 社群連結 -->
+                <div class="new-index-section">
+                    <a href="https://www.facebook.com/share/1MeFfky2zf/" target="_blank" rel="noopener" class="about-ext-link">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-ext-label">Facebook</span>
+                        <span class="about-ext-arrow">↗</span>
+                    </a>
+                </div>
+                <div class="new-index-section">
+                    <a href="https://x.com/chawei_1126" target="_blank" rel="noopener" class="about-ext-link">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-ext-label">X（Twitter）</span>
+                        <span class="about-ext-arrow">↗</span>
+                    </a>
+                </div>
+                <div class="new-index-section">
+                    <a href="https://www.instagram.com/chawei_uwu?igsh=MWY2bGU2NnJvbmdqZg==" target="_blank" rel="noopener" class="about-ext-link">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-ext-label">Instagram</span>
+                        <span class="about-ext-arrow">↗</span>
+                    </a>
+                </div>
+                <div class="new-index-section">
+                    <a href="https://www.threads.com/@chawei_uwu" target="_blank" rel="noopener" class="about-ext-link">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-ext-label">Threads</span>
+                        <span class="about-ext-arrow">↗</span>
+                    </a>
+                </div>
+                <div class="new-index-section">
+                    <a href="https://www.pixiv.net/users/111936845" target="_blank" rel="noopener" class="about-ext-link">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-ext-label">Pixiv</span>
+                        <span class="about-ext-arrow">↗</span>
+                    </a>
+                </div>
+
+                <!-- 第二分隔線 -->
+                <div class="new-index-divider-label" style="margin-top:18px;">電子信箱</div>
+
+                <!-- 信箱：顯示 + 複製按鈕同一區塊 -->
+                <div class="new-index-section">
+                    <div class="about-email-row">
+                        <span class="about-diamond-icon">⋄</span>
+                        <span class="about-email-text">mail</span>
+                        <button class="about-copy-btn-full" onclick="copyEmail(this)" title="複製信箱">複製</button>
+                    </div>
+                </div>
+
+                <div style="height:40px;"></div>
+            </div>
+        </div>
+    </div><!-- /aboutauthor-group -->
+
+<style>
+/* ── 關於作者頁面專用樣式 ── */
+.about-ext-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border: 1.5px solid #dde8e6;
+    padding: 13px 20px;
+    text-decoration: none;
+    color: var(--main-color);
+    letter-spacing: 2px;
+    font-size: 0.95rem;
+    transition: all 0.22s ease;
+    margin-bottom: 0;
+    position: relative;
+}
+.about-ext-link:hover {
+    background: #f0f6f9;
+    border-color: #4D7F93;
+    padding-left: 28px;
+    color: #4D7F93;
+}
+
+/* 菱形圖示容器 */
+.about-diamond-icon {
+    width: 28px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #5b8fa8;
+    flex-shrink: 0;
+    transition: color 0.22s ease;
+    line-height: 1;
+}
+.about-ext-link:hover .about-diamond-icon {
+    color: #4D7F93;
+}
+.about-email-row .about-diamond-icon {
+    color: #5b8fa8;
+}
+
+.about-ext-label { flex: 1; }
+.about-ext-arrow {
+    font-size: 0.9rem;
+    color: #bbb;
+    transition: color 0.2s;
+}
+.about-ext-link:hover .about-ext-arrow { color: #4D7F93; }
+
+/* 信箱列（含複製按鈕） */
+.about-email-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border: 1.5px solid #dde8e6;
+    padding: 13px 20px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #555;
+}
+.about-email-text {
+    flex: 1;
+    font-size: 0.69rem;
+    word-break: break-all;
+}
+.about-copy-btn-full {
+    background: none;
+    border: 1px solid #c8d8d5;
+    color: #5b8fa8;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+.about-copy-btn-full:hover {
+    background: #f0f6f9;
+    border-color: #4D7F93;
+    color: #4D7F93;
+}
+.about-copy-btn-full.copied {
+    color: #246d5e;
+    border-color: #246d5e;
+    background: #f0faf7;
+}
+</style>
+
+<script>
+function copyEmail(btn) {
+    navigator.clipboard.writeText('mail').then(() => {
+        btn.textContent = '✓ 已複製';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '複製'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = 'mail';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = '✓ 已複製';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '複製'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+</script>
+
+<script>
+    
+
+// ═══════════════════════════════════════════════
+// ★ 工具函數（供動態渲染使用）
+// ═══════════════════════════════════════════════
+function preventOrphans(text, minChars) {
+  if (!text) return text;
+  const min = minChars || 5;
+  return text.split('\n').map(para => {
+    const trimmed = para.trimEnd();
+    // 短段落（總長不超過 min*3）不處理，避免誤插
+    if (trimmed.length <= min * 3) return para;
+    // 在倒數第 min 個字前插入零寬不換行空格，讓最後幾個字黏在一起
+    const insertAt = trimmed.length - min;
+    return trimmed.slice(0, insertAt) + '\uFEFF' + trimmed.slice(insertAt);
+  }).join('\n');
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// 多行文字專用：防孤字 + HTML 跳脫 + \n 轉 <br>
+// 允許 <br>、<p>、</p> 直接通過（作者在試算表手動輸入的排版標籤）
+function escText(str, minOrphans) {
+  const processed = preventOrphans(str, minOrphans || 5);
+  // 先整體跳脫，再把被跳脫的 <br> <p> </p> 還原
+  return esc(processed)
+    .replace(/\n/g, '<br>')
+    .replace(/&lt;br\s*\/?&gt;/gi, '<br>')
+    .replace(/&lt;p&gt;/gi, '<p>')
+    .replace(/&lt;\/p&gt;/gi, '</p>');
+}
+
+
+
+// ═══════════════════════════════════════════════
+// ★ 頁面 HTML 生成器（供動態渲染使用）
+// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════
+// ★ 世界觀 / 宗教 頁面生成器（from preview tool）
+// ═══════════════════════════════════════════════
+function buildLoreHTML(d, preview) {
+  const banner = d.banner_url ? `
+    <div class="lore-top-image">
+      <img src="${esc(d.banner_url)}" alt="${esc(d.title_zh || '')}">
+    </div>` : '';
+
+  // Q&A 區塊（附在最後一個子條目內部，與靈氣頁面結構一致）
+  const qaItems = [
+    [d.qa1_q, d.qa1_a],
+    [d.qa2_q, d.qa2_a],
+  ].filter(([q]) => q).map(([q,a]) => `
+        <details class="qa-item">
+          <summary>${esc(q)}</summary>
+          <div class="qa-content">${escText(a || '')}</div>
+        </details>`).join('');
+
+  const qaBlock = qaItems ? `
+      <div class="lore-qa-section">
+        <div class="qa-group-title">常見疑問 / Q&amp;A</div>
+        ${qaItems}
+      </div>` : '';
+
+  // 子條目 1（無 Q&A）
+  const sec1 = (d.section1_title || d.section1_content) ? `
+    <div class="sub-concept-box">
+      ${d.section1_title ? `<div class="sub-concept-title">${esc(d.section1_title)}</div>` : ''}
+      <div class="sub-concept-content">${esc(preventOrphans(d.section1_content || ''))}</div>
+    </div>` : '';
+
+  // 子條目 2（Q&A 附於其內部結尾）
+  const sec2 = (d.section2_title || d.section2_content) ? `
+    <div class="sub-concept-box">
+      ${d.section2_title ? `<div class="sub-concept-title">${esc(d.section2_title)}</div>` : ''}
+      <div class="sub-concept-content">${esc(preventOrphans(d.section2_content || ''))}</div>
+      ${qaBlock}
+    </div>` : (qaBlock ? `<div class="sub-concept-box">${qaBlock}</div>` : '');
+
+  return `<div id="${esc(d.id || 'lore-new')}" class="page-content${preview ? ' active-page' : ''}">
+  <div class="lore-container">
+    ${banner}
+    <div class="lore-header">
+      <h1 class="lore-title" style="color:#3E4644;">⋄ ${esc(d.title_zh || '')} ⋄</h1>
+      ${d.title_en ? `<p style="color:#aaa; letter-spacing:2px; font-size:0.85rem; margin-top:5px;">${esc(d.title_en)}</p>` : ''}
+    </div>
+    <div class="lore-main-concept">
+      <span class="concept-label">敘述 / Description</span>
+      <p style="margin-top:5px;">${escText(d.description || '—')}</p>
+      <div class="concept-divider"></div>
+      <span class="concept-label">教廷政府定義 / Official Definition</span>
+      <p style="margin-top:5px;">${escText(d.official_def || '—暫無相關定義—')}</p>
+    </div>
+    ${sec1}
+    ${sec2}
+  </div>
+</div>`;
+}
+
+// ─────────────────────────────────────────────
+// 宗教 HTML 生成器
+// ─────────────────────────────────────────────
+function buildReligionHTML(d, preview) {
+  const tc   = d.theme_color    || '#e2c792';
+  const bg   = d.bg_color       || '#1a2a3a';
+  const txt  = d.text_color     || '#e0e0e0';
+  const sub  = d.sub_text_color || '#b0c4de';
+
+  // ── 教徽 ──
+  const logo = d.logo_url ? `
+    <div style="width:160px;height:160px;border:2px solid ${tc};background:#0d1621;margin:0 auto 30px;border-radius:4px;overflow:hidden;box-shadow:0 0 15px rgba(226,199,146,0.2);">
+      <img src="${esc(d.logo_url)}" alt="${esc(d.title_zh||'')}教徽" style="width:100%;height:100%;object-fit:cover;">
+    </div>` : '';
+
+  // ── 子條目輔助（深色版） ──
+  function sec(title, content, isPrayer) {
+    if (!title && !content) return '';
+    const contentHtml = isPrayer
+      ? `<p style="font-size:0.95rem;line-height:2;color:${sub};">${escText(content)}</p>`
+      : `<div class="sub-concept-content" style="color:${sub};">${escText(content)}</div>`;
+    return `
+    <div class="sub-concept-box" style="border:none;padding-left:0;">
+      ${title ? `<div class="sub-concept-title" style="color:${tc};justify-content:left;">${esc(title)}</div>` : ''}
+      ${contentHtml}
+    </div>`;
+  }
+
+  // ── 人造神 / 教主 人物卡（支援 2 位） ──
+  function personCard(id, avatar, name, desc) {
+    if (!name && !avatar) return '';
+    const avatarSrc = avatar || `https://via.placeholder.com/130/111/fff?text=${encodeURIComponent(name||'?')}`;
+    const clickAttr = id ? ` onclick="directToChar('${esc(id)}')" style="cursor:pointer;"` : '';
+    return `
+      <div class="char-item"${clickAttr} style="display:inline-block;text-align:center;margin:0 15px 20px;">
+        <div class="diamond-avatar" style="width:130px;height:130px;--highlight:${tc};">
+          <img src="${esc(avatarSrc)}" alt="${esc(name||'')}">
+        </div>
+        <h2 style="font-size:1.2rem;color:${tc};margin-top:10px;">${esc(name||'')}</h2>
+        ${desc ? `<p style="font-size:0.9rem;color:${sub};padding:0 10px;line-height:1.6;max-width:200px;text-align:center;margin:0 auto;">${escText(desc)}</p>` : ''}
+      </div>`;
+  }
+
+  const godsBlock = d.god_name ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);margin:30px 0;"></div>
+    <div class="sub-section-label" style="color:${tc};">—— 人造神 ——</div>
+    <div style="text-align:center;">
+      ${personCard(d.god_id, d.god_avatar, d.god_name, d.god_desc)}
+    </div>` : '';
+
+  const foundersBlock = d.founder1_name ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);margin:30px 0;"></div>
+    <div class="sub-section-label" style="color:${tc};">—— 創始教主 ——</div>
+    <div style="text-align:center;">
+      ${personCard(d.founder1_id, d.founder1_avatar, d.founder1_name, d.founder1_desc)}
+      ${personCard(d.founder2_id, d.founder2_avatar, d.founder2_name, d.founder2_desc)}
+    </div>` : '';
+
+  // ── 教主個人介紹頁（深色縣市排版風格）──
+  function founderPage(prefix) {
+    const fid     = d[`${prefix}_id`];
+    const fname   = d[`${prefix}_name`];
+    if (!fname && !fid) return '';
+
+    const favatar = d[`${prefix}_avatar`] || `https://via.placeholder.com/150/111/fff?text=${encodeURIComponent(fname||'?')}`;
+    const fen     = d[`${prefix}_en`]     || 'FOUNDER';
+    const frank   = d[`${prefix}_rank`]   || '';
+    const fquote  = d[`${prefix}_quote`]  || '';
+    const fdetail = d[`${prefix}_detail`] || '';
+
+    const basicRows = [
+      ['常態性別', d[`${prefix}_gender`]],
+      ['身高',     d[`${prefix}_height`]],
+      ['體重',     d[`${prefix}_weight`]],
+      ['喜愛',     d[`${prefix}_likes`]],
+      ['厭惡',     d[`${prefix}_dislikes`]],
+    ].filter(([,v]) => v).map(([l,v]) => `
+      <div class="detail-item" style="color:${sub};">
+        <strong style="color:${tc};">${esc(l)}：</strong>${esc(v)}
+      </div>`).join('');
+
+    const fstats = [
+      [d[`${prefix}_stat1_label`], d[`${prefix}_stat1_value`]],
+      [d[`${prefix}_stat2_label`], d[`${prefix}_stat2_value`]],
+      [d[`${prefix}_stat3_label`], d[`${prefix}_stat3_value`]],
+    ].filter(([l,v]) => l && v).map(([l,v]) => `
+      <div class="stat-row">
+        <div class="stat-label" style="color:${sub};">${esc(l)}</div>
+        <div class="stat-bar-bg" style="background:rgba(255,255,255,0.1);">
+          <div class="stat-bar-fill" data-width="${esc(v)}%" style="background:${tc};${preview?'width:0%':''}"></div>
+        </div>
+        <div class="stat-value" style="color:${tc};">${esc(v)}%</div>
+      </div>`).join('');
+
+    const fportrait = d[`${prefix}_portrait_url`] ? `
+      <div class="sub-section-label" style="color:${tc};">— 立繪 —</div>
+      <div class="image-box">
+        <img src="${esc(d[`${prefix}_portrait_url`])}" alt="立繪">
+        <p class="img-caption" style="color:${sub};">${esc(d[`${prefix}_portrait_caption`]||'')}</p>
+      </div>` : '';
+
+    const fslides = [
+      [d[`${prefix}_slide1_url`], d[`${prefix}_slide1_caption`]],
+      [d[`${prefix}_slide2_url`], d[`${prefix}_slide2_caption`]],
+      [d[`${prefix}_slide3_url`], d[`${prefix}_slide3_caption`]],
+    ].filter(([u]) => u);
+    const fslider = fslides.length > 0 ? `
+      <div class="sub-section-label" style="color:${tc};">— 設定 —</div>
+      <div class="slider-container setting-slider">
+        <button class="slider-btn" onclick="moveSlide(this,-1)">❮</button>
+        <div class="slider-wrapper">
+          <div class="slider-content" data-index="0" style="transform:translateX(0%);">
+            ${fslides.map(([u,c]) => `<div class="slide setting-slide"><img src="${esc(u)}" alt="" onclick="openLightbox(this.src)"><p class="img-caption" style="color:${sub};">${esc(c||'')}</p></div>`).join('')}
+          </div>
+        </div>
+        <button class="slider-btn" onclick="moveSlide(this,1)">❯</button>
+      </div>` : '';
+
+    const fgallery = (fportrait || fslider) ? `
+      <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+      <div class="section-title" style="color:${tc};">⋄ 圖集 ⋄</div>
+      ${fportrait}${fslider}` : '';
+
+    return `
+<div id="${esc(fid||fname)}" class="page-content">
+  <div class="profile-container" style="background:${bg};border-color:${tc};">
+    <div class="profile-header">
+      <div class="avatar-circle" style="--highlight:${tc};">
+        <img src="${esc(favatar)}" alt="${esc(fname)}">
+      </div>
+      <h1 class="city-name" style="color:${tc};">
+        ${esc(fname)}
+        <span class="en-name" style="color:rgba(226,199,146,0.5);">${esc(fen)}</span>
+      </h1>
+      ${frank ? `<p class="rank-tag" style="color:${sub};">${esc(frank)}</p>` : ''}
+    </div>
+    ${fquote ? `<div class="intro-text" style="color:${sub};">${escText(fquote)}</div>` : ''}
+    ${basicRows ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+    <div class="section-title" style="color:${tc};">⋄ 基本資料 ⋄</div>
+    ${basicRows}` : ''}
+    ${fdetail ? `
+    <div class="section-title" style="color:${tc};">⋄ 詳細資料 ⋄</div>
+    <div class="sub-concept-content" style="color:${sub};">${escText(fdetail)}</div>` : ''}
+    ${fstats ? `
+    <div class="section-title" style="color:${tc};">⋄ 客觀評量 ⋄</div>
+    ${fstats}` : ''}
+    ${fgallery}
+  </div>
+</div>`;
+  }
+
+  // ── 人造神個人介紹頁 ──
+  function godPage() {
+    const gid    = d.god_id;
+    const gname  = d.god_name;
+    if (!gname && !gid) return '';
+
+    const gavatar = d.god_avatar || `https://via.placeholder.com/150/111/fff?text=${encodeURIComponent(gname||'?')}`;
+    const gen     = d.god_en     || 'ARTIFICIAL DEITY';
+    const grank   = d.god_rank   || '';
+    const gquote  = d.god_quote  || '';
+    const gdetail = d.god_detail || '';
+
+    const basicRows = [
+      ['所屬宗教', d.god_religion || d.title_zh],
+      ['性質',     d.id === 'c-kuhua' ? '國家級人造軀殼' : '人造神'],
+      ['常態性別', d.god_gender],
+      ['身高',     d.god_height],
+      ['體重',     d.god_weight],
+      ['喜愛',     d.god_likes],
+      ['厭惡',     d.god_dislikes],
+    ].filter(([,v]) => v).map(([l,v]) => `
+      <div class="detail-item" style="color:${sub};">
+        <strong style="color:${tc};">${esc(l)}：</strong>${esc(v)}
+      </div>`).join('');
+
+    const gstats = [
+      [d.god_stat1_label, d.god_stat1_value],
+      [d.god_stat2_label, d.god_stat2_value],
+      [d.god_stat3_label, d.god_stat3_value],
+    ].filter(([l,v]) => l && v).map(([l,v]) => `
+      <div class="stat-row">
+        <div class="stat-label" style="color:${sub};">${esc(l)}</div>
+        <div class="stat-bar-bg" style="background:rgba(255,255,255,0.1);">
+          <div class="stat-bar-fill" data-width="${esc(v)}%" style="background:${tc};${preview?'width:0%':''}"></div>
+        </div>
+        <div class="stat-value" style="color:${tc};">${esc(v)}%</div>
+      </div>`).join('');
+
+    const gportrait = d.god_portrait_url ? `
+      <div class="sub-section-label" style="color:${tc};">— 立繪 —</div>
+      <div class="image-box">
+        <img src="${esc(d.god_portrait_url)}" alt="立繪">
+        <p class="img-caption" style="color:${sub};">${esc(d.god_portrait_caption||'')}</p>
+      </div>` : '';
+
+    const gslides = [
+      [d.god_slide1_url, d.god_slide1_caption],
+      [d.god_slide2_url, d.god_slide2_caption],
+      [d.god_slide3_url, d.god_slide3_caption],
+    ].filter(([u]) => u);
+    const gslider = gslides.length > 0 ? `
+      <div class="sub-section-label" style="color:${tc};">— 設定 —</div>
+      <div class="slider-container setting-slider">
+        <button class="slider-btn" onclick="moveSlide(this,-1)">❮</button>
+        <div class="slider-wrapper">
+          <div class="slider-content" data-index="0" style="transform:translateX(0%);">
+            ${gslides.map(([u,c]) => `<div class="slide setting-slide"><img src="${esc(u)}" alt="" onclick="openLightbox(this.src)"><p class="img-caption" style="color:${sub};">${esc(c||'')}</p></div>`).join('')}
+          </div>
+        </div>
+        <button class="slider-btn" onclick="moveSlide(this,1)">❯</button>
+      </div>` : '';
+
+    const ggallery = (gportrait || gslider) ? `
+      <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+      <div class="section-title" style="color:${tc};">⋄ 圖集 ⋄</div>
+      ${gportrait}${gslider}` : '';
+
+    return `
+<div id="${esc(gid||gname)}" class="page-content">
+  <div class="profile-container" style="background:${bg};border-color:${tc};">
+    <div class="profile-header">
+      <div class="avatar-circle" style="--highlight:${tc};">
+        <img src="${esc(gavatar)}" alt="${esc(gname)}">
+      </div>
+      <h1 class="city-name" style="color:${tc};">
+        ${esc(gname)}
+        <span class="en-name" style="color:rgba(226,199,146,0.5);">${esc(gen)}</span>
+      </h1>
+      ${grank ? `<p class="rank-tag" style="color:${sub};">${esc(grank)}</p>` : ''}
+    </div>
+    ${gquote ? `<div class="intro-text" style="color:${sub};">${escText(gquote)}</div>` : ''}
+    ${basicRows ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+    <div class="section-title" style="color:${tc};">⋄ 基本資料 ⋄</div>
+    ${basicRows}` : ''}
+    ${gdetail ? `
+    <div class="section-title" style="color:${tc};">⋄ 詳細資料 ⋄</div>
+    <div class="sub-concept-content" style="color:${sub};">${escText(gdetail)}</div>` : ''}
+    ${gstats ? `
+    <div class="section-title" style="color:${tc};">⋄ 客觀評量 ⋄</div>
+    ${gstats}` : ''}
+    ${ggallery}
+  </div>
+</div>`;
+  }
+
+  return `<div id="${esc(d.id||'religion-new')}" class="page-content${preview?' active-page':''}">
+  <div class="lore-container" style="background:${bg};color:${txt};border-left:4px solid ${tc};text-align:left;">
+
+    ${logo}
+
+    <div class="lore-header" style="text-align:center;">
+      <h1 class="lore-title" style="font-size:2rem;color:${tc};">⋄ ${esc(d.title_zh||'')} ⋄</h1>
+      ${d.title_en ? `<p style="color:#8da9c4;letter-spacing:4px;font-size:0.9rem;">${esc(d.title_en)}</p>` : ''}
+    </div>
+
+    <div class="lore-main-concept" style="background:rgba(0,0,0,0.3);border-color:${tc};color:#ccc;">
+      <span class="concept-label" style="color:${tc};">教義理念 / Philosophy</span>
+      <p style="margin-top:10px;font-size:1.1rem;letter-spacing:1px;">${escText(d.philosophy||'—')}</p>
+      <div class="concept-divider" style="border-top:1px solid ${tc};opacity:0.5;"></div>
+      <span class="concept-label" style="color:${tc};">教廷政府定義 / Official Definition</span>
+      <p style="margin-top:5px;">${escText(d.official_def||'—')}</p>
+    </div>
+
+    ${sec('簡介與特色', d.intro)}
+    ${sec('詳細敘述',   d.detail)}
+    ${sec('咒禱文',     d.prayer, true)}
+    ${sec('入教要求',   d.join_req)}
+    ${sec('直營醫院',   d.hospital)}
+
+    ${godsBlock}
+    ${foundersBlock}
+
+  </div>
+</div>`;
+}
+
+function buildCharHTML(d, preview) {
+  const color = d.highlight_color || '#246d5e';
+  const rankLines = (d.rank || '').replace(/\\n/g, '<br>');
+  const quote = d.quote ? `<div class="intro-text">${esc(d.quote)}</div>` : '';
+  const avatarSrc = d.avatar_url || 'https://via.placeholder.com/180?text=' + encodeURIComponent(d.name_zh || '?');
+
+  // 基本資料
+  const basicFields = [
+    ['常態性別', d.gender],
+    ['身高', d.height],
+    ['體重', d.weight],
+    ['喜愛', d.likes],
+    ['厭惡', d.dislikes],
+  ].filter(([,v]) => v).map(([k,v]) =>
+    `<div class="detail-item"><strong>${k}：</strong>${esc(v)}</div>`
+  ).join('\n');
+
+  // 評量條（只有六都顯示數值條，其他縣市顯示「無法取得完整數據」）
+  const SIX_CITIES = ['tp','ntp','ty','tc','tn','kh'];
+  const isSixCity = SIX_CITIES.includes(d.id);
+  const statsRaw = [
+    [d.stat1_label, d.stat1_value],
+    [d.stat2_label, d.stat2_value],
+    [d.stat3_label, d.stat3_value],
+  ].filter(([l,v]) => l && v).map(([l,v]) => `
+    <div class="stat-row">
+      <div class="stat-label">${esc(l)}</div>
+      <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="${esc(v)}%" style="background:${color};${preview ? 'width:0%' : ''}"></div></div>
+      <div class="stat-value">${esc(v)}%</div>
+    </div>`).join('\n');
+  const stats = isSixCity ? statsRaw
+      : `<p style="text-align:center; color:#aaa; letter-spacing:2px; font-size:0.9rem; margin:8px 0;">—無法取得完整數據—</p>`;
+
+  // 立繪
+  const portrait = d.portrait_url ? `
+    <div class="sub-section-label" style="color:${color};">— 立繪 —</div>
+    <div class="image-box">
+      <img src="${esc(d.portrait_url)}" alt="立繪">
+      <p class="img-caption">${esc(d.portrait_caption || '')}</p>
+    </div>` : '';
+
+  // 輪播
+  const slides = [
+    [d.slide1_url, d.slide1_caption],
+    [d.slide2_url, d.slide2_caption],
+    [d.slide3_url, d.slide3_caption],
+  ].filter(([u]) => u);
+  const sliderHtml = slides.length > 0 ? `
+    <div class="sub-section-label" style="color:${color};">— 設定 —</div>
+    <div class="slider-container setting-slider">
+      <button class="slider-btn" onclick="moveSlide(this,-1)">❮</button>
+      <div class="slider-wrapper">
+        <div class="slider-content" data-index="0" style="transform:translateX(0%);">
+          ${slides.map(([u,c]) => `<div class="slide setting-slide"><img src="${esc(u)}" alt="" onclick="openLightbox(this.src)"><p class="img-caption">${esc(c||'')}</p></div>`).join('')}
+        </div>
+      </div>
+      <button class="slider-btn" onclick="moveSlide(this,1)">❯</button>
+    </div>` : '';
+
+  const gallerySection = (portrait || sliderHtml) ? `
+    <div class="divider"></div>
+    <div class="section-title" style="color:#3E4644;">⋄ 圖集 ⋄</div>
+    ${portrait}
+    ${sliderHtml}` : '';
+
+  return `<div id="${esc(d.id || 'char-new')}" class="page-content${preview ? ' active-page' : ''}" style="--highlight:${color};">
+  <div class="profile-container">
+    <div class="profile-header">
+      <div class="avatar-circle" style="--highlight:${color};">
+        <img src="${esc(avatarSrc)}" alt="${esc(d.name_zh || '')}">
+      </div>
+      <h1 class="city-name" style="color:#3E4644;">
+        ${esc(d.name_zh || '')}
+        ${d.name_en ? `<span class="en-name">${esc(d.name_en)}</span>` : ''}
+      </h1>
+      ${d.rank ? `<p class="rank-tag">${rankLines}</p>` : ''}
+    </div>
+    ${quote}
+    ${basicFields ? `<div class="divider"></div>\n    <div class="section-title" style="color:#3E4644;">⋄ 基本資料 ⋄</div>\n    ${basicFields}` : ''}
+    ${d.description ? `<div class="section-title" style="color:#3E4644;">⋄ 詳細資料 ⋄</div>\n    <div class="sub-concept-content">${esc(preventOrphans(d.description))}</div>` : ''}
+    ${stats ? `<div class="section-title" style="color:#3E4644;">⋄ 客觀評量 ⋄</div>\n    ${stats}` : ''}
+    ${gallerySection}
+  </div>
+</div>`;
+}
+
+// ─────────────────────────────────────────────
+// 人造神介紹頁 HTML 生成器
+// 欄位與角色相同，但裝飾色固定金色 #e2c792、底色從 bg_color 讀取
+// ─────────────────────────────────────────────
+function buildGodCharHTML(d, preview) {
+  const tc  = '#e2c792';                          // 金色，固定
+  const bg  = d.bg_color       || '#0d1621';      // 宗教底色
+  const sub = d.sub_text_color || '#b0c4de';
+  const avatarSrc = d.avatar_url || `https://via.placeholder.com/180?text=${encodeURIComponent(d.name_zh||'?')}`;
+
+  const basicFields = [
+    ['所屬宗教', d.religion],
+    ['性質',     d.id === 'c-kuhua' ? '國家級人造軀殼' : '人造神'],
+    ['常態性別', d.gender],
+    ['身高',     d.height],
+    ['體重',     d.weight],
+    ['喜愛',     d.likes],
+    ['厭惡',     d.dislikes],
+  ].filter(([,v]) => v).map(([k,v]) => `
+    <div class="detail-item" style="color:${sub};">
+      <strong style="color:${tc};">${k}：</strong>${esc(v)}
+    </div>`).join('');
+
+  const stats = [
+    [d.stat1_label, d.stat1_value],
+    [d.stat2_label, d.stat2_value],
+    [d.stat3_label, d.stat3_value],
+  ].filter(([l,v]) => l && v).map(([l,v]) => `
+    <div class="stat-row">
+      <div class="stat-label" style="color:${sub};">${esc(l)}</div>
+      <div class="stat-bar-bg" style="background:rgba(255,255,255,0.1);">
+        <div class="stat-bar-fill" data-width="${esc(v)}%" style="background:${tc};${preview?'width:0%':''}"></div>
+      </div>
+      <div class="stat-value" style="color:${tc};">${esc(v)}%</div>
+    </div>`).join('');
+
+  const portrait = d.portrait_url ? `
+    <div class="sub-section-label" style="color:${tc};">— 立繪 —</div>
+    <div class="image-box">
+      <img src="${esc(d.portrait_url)}" alt="立繪">
+      <p class="img-caption" style="color:${sub};">${esc(d.portrait_caption||'')}</p>
+    </div>` : '';
+
+  const slides = [[d.slide1_url,d.slide1_caption],[d.slide2_url,d.slide2_caption],[d.slide3_url,d.slide3_caption]].filter(([u])=>u);
+  const slider = slides.length > 0 ? `
+    <div class="sub-section-label" style="color:${tc};">— 設定 —</div>
+    <div class="slider-container setting-slider">
+      <button class="slider-btn" onclick="moveSlide(this,-1)">❮</button>
+      <div class="slider-wrapper">
+        <div class="slider-content" data-index="0" style="transform:translateX(0%);">
+          ${slides.map(([u,c])=>`<div class="slide setting-slide"><img src="${esc(u)}" alt="" onclick="openLightbox(this.src)"><p class="img-caption" style="color:${sub};">${esc(c||'')}</p></div>`).join('')}
+        </div>
+      </div>
+      <button class="slider-btn" onclick="moveSlide(this,1)">❯</button>
+    </div>` : '';
+
+  const gallery = (portrait||slider) ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+    <div class="section-title" style="color:${tc};">⋄ 圖集 ⋄</div>
+    ${portrait}${slider}` : '';
+
+  return `<div id="${esc(d.id||'god-new')}" class="page-content${preview?' active-page':''}" style="--highlight:${tc};">
+  <div class="profile-container" style="background:${bg};border-color:${tc};">
+    <div class="profile-header">
+      <div class="avatar-circle" style="--highlight:${tc};">
+        <img src="${esc(avatarSrc)}" alt="${esc(d.name_zh||'')}">
+      </div>
+      <h1 class="city-name" style="color:${tc};">
+        ${esc(d.name_zh||'')}
+        <span class="en-name" style="color:rgba(226,199,146,0.45);">${esc(d.name_en||(d.id==='c-kuhua'?'NATIONAL VESSEL':'ARTIFICIAL DEITY'))}</span>
+      </h1>
+      ${d.rank ? `<p class="rank-tag" style="color:${sub};">${esc(d.rank)}</p>` : ''}
+    </div>
+    ${d.quote ? `<div class="intro-text" style="color:${sub};">${escText(d.quote)}</div>` : ''}
+    ${basicFields ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+    <div class="section-title" style="color:${tc};">⋄ 基本資料 ⋄</div>
+    ${basicFields}` : ''}
+    ${d.description ? `
+    <div class="section-title" style="color:${tc};">⋄ 詳細資料 ⋄</div>
+    <div class="sub-concept-content" style="color:${sub};">${escText(d.description)}</div>` : ''}
+    ${stats ? `
+    <div class="section-title" style="color:${tc};">⋄ 客觀評量 ⋄</div>
+    ${stats}` : ''}
+    ${gallery}
+  </div>
+</div>`;
+}
+
+// ─────────────────────────────────────────────
+// 創始教主介紹頁 HTML 生成器
+// 欄位與角色相同，但裝飾色固定金色 #e2c792、底色從 bg_color 讀取
+// ─────────────────────────────────────────────
+function buildFounderCharHTML(d, preview) {
+  const tc  = '#e2c792';
+  const bg  = d.bg_color       || '#0d1621';
+  const sub = d.sub_text_color || '#8da9c4';
+  const avatarSrc = d.avatar_url || `https://via.placeholder.com/180?text=${encodeURIComponent(d.name_zh||'?')}`;
+
+  const basicFields = [
+    ['所屬宗教', d.religion],
+    ['身份',     '創始教主'],
+    ['常態性別', d.gender],
+    ['身高',     d.height],
+    ['體重',     d.weight],
+    ['喜愛',     d.likes],
+    ['厭惡',     d.dislikes],
+  ].filter(([,v]) => v).map(([k,v]) => `
+    <div class="detail-item" style="color:${sub};">
+      <strong style="color:${tc};">${k}：</strong>${esc(v)}
+    </div>`).join('');
+
+  const stats = [
+    [d.stat1_label, d.stat1_value],
+    [d.stat2_label, d.stat2_value],
+    [d.stat3_label, d.stat3_value],
+  ].filter(([l,v]) => l && v).map(([l,v]) => `
+    <div class="stat-row">
+      <div class="stat-label" style="color:${sub};">${esc(l)}</div>
+      <div class="stat-bar-bg" style="background:rgba(255,255,255,0.1);">
+        <div class="stat-bar-fill" data-width="${esc(v)}%" style="background:${tc};${preview?'width:0%':''}"></div>
+      </div>
+      <div class="stat-value" style="color:${tc};">${esc(v)}%</div>
+    </div>`).join('');
+
+  const portrait = d.portrait_url ? `
+    <div class="sub-section-label" style="color:${tc};">— 立繪 —</div>
+    <div class="image-box">
+      <img src="${esc(d.portrait_url)}" alt="立繪">
+      <p class="img-caption" style="color:${sub};">${esc(d.portrait_caption||'')}</p>
+    </div>` : '';
+
+  const slides = [[d.slide1_url,d.slide1_caption],[d.slide2_url,d.slide2_caption],[d.slide3_url,d.slide3_caption]].filter(([u])=>u);
+  const slider = slides.length > 0 ? `
+    <div class="sub-section-label" style="color:${tc};">— 設定 —</div>
+    <div class="slider-container setting-slider">
+      <button class="slider-btn" onclick="moveSlide(this,-1)">❮</button>
+      <div class="slider-wrapper">
+        <div class="slider-content" data-index="0" style="transform:translateX(0%);">
+          ${slides.map(([u,c])=>`<div class="slide setting-slide"><img src="${esc(u)}" alt="" onclick="openLightbox(this.src)"><p class="img-caption" style="color:${sub};">${esc(c||'')}</p></div>`).join('')}
+        </div>
+      </div>
+      <button class="slider-btn" onclick="moveSlide(this,1)">❯</button>
+    </div>` : '';
+
+  const gallery = (portrait||slider) ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+    <div class="section-title" style="color:${tc};">⋄ 圖集 ⋄</div>
+    ${portrait}${slider}` : '';
+
+  return `<div id="${esc(d.id||'founder-new')}" class="page-content${preview?' active-page':''}" style="--highlight:${tc};">
+  <div class="profile-container" style="background:${bg};border-color:${tc};">
+    <div class="profile-header">
+      <div class="avatar-circle" style="--highlight:${tc};">
+        <img src="${esc(avatarSrc)}" alt="${esc(d.name_zh||'')}">
+      </div>
+      <h1 class="city-name" style="color:${tc};">
+        ${esc(d.name_zh||'')}
+        <span class="en-name" style="color:rgba(226,199,146,0.45);">${esc(d.name_en||'FOUNDER')}</span>
+      </h1>
+      ${d.rank ? `<p class="rank-tag" style="color:${sub};">${esc(d.rank)}</p>` : ''}
+    </div>
+    ${d.quote ? `<div class="intro-text" style="color:${sub};">${escText(d.quote)}</div>` : ''}
+    ${basicFields ? `
+    <div class="divider" style="background:linear-gradient(to right,transparent,${tc},transparent);"></div>
+    <div class="section-title" style="color:${tc};">⋄ 基本資料 ⋄</div>
+    ${basicFields}` : ''}
+    ${d.description ? `
+    <div class="section-title" style="color:${tc};">⋄ 詳細資料 ⋄</div>
+    <div class="sub-concept-content" style="color:${sub};">${escText(d.description)}</div>` : ''}
+    ${stats ? `
+    <div class="section-title" style="color:${tc};">⋄ 客觀評量 ⋄</div>
+    ${stats}` : ''}
+    ${gallery}
+  </div>
+</div>`;
+}
+
+// ─────────────────────────────────────────────
+// 世界觀 HTML 生成器
+// ─────────────────────────────────────────────
+
+
+// ═══════════════════════════════════════════════
+// ★ 動態載入設定
+// ═══════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbzGMPmDQm6FS64kv9hSIcCoURRikExLOKIF5-1JjSFLtGsao3S_QNzFndGW_DLRS-dB/exec';
+
+// id 前綴對應 API type
+function getApiType(id) {
+    if (id === 'c-kuhua')                                                      return 'god';  // 國家級人造軀殼，走 god 模板
+    if (id.startsWith('c-blue-founder') || id.startsWith('c-green-founder')) return 'founder';
+    if (id.startsWith('c-k') || id.startsWith('c-d'))                        return 'god';
+    if (id.startsWith('r-'))                                                   return 'religion';
+    if (id.startsWith('w-') || id.startsWith('g-'))                           return 'lore';
+    return 'char';
+}
+
+// 骨架 loading 頁面
+function skeletonHTML(id) {
+    return `<div id="${id}" class="page-content active-page" style="min-height:60vh;">
+  <div class="profile-container" style="animation:none;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px 20px;">
+      <div style="width:130px;height:130px;background:#e0e0e0;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);animation:skeletonPulse 1.2s ease-in-out infinite;"></div>
+      <div style="width:140px;height:22px;background:#e0e0e0;border-radius:4px;animation:skeletonPulse 1.2s ease-in-out infinite 0.1s;"></div>
+      <div style="width:200px;height:14px;background:#e0e0e0;border-radius:4px;animation:skeletonPulse 1.2s ease-in-out infinite 0.2s;"></div>
+      <div style="margin-top:8px;font-size:0.75rem;letter-spacing:3px;color:#bbb;animation:skeletonPulse 1.2s ease-in-out infinite 0.3s;">Loading…</div>
+    </div>
+  </div>
+</div>`;
+}
+
+// 錯誤頁面
+function errorPageHTML(id, msg) {
+    return `<div id="${id}" class="page-content active-page">
+  <div class="profile-container" style="text-align:center;padding:60px 20px;color:#999;">
+    <div style="font-size:2rem;margin-bottom:16px;">⚠️</div>
+    <div style="letter-spacing:2px;font-size:0.95rem;">載入失敗</div>
+    <div style="font-size:0.8rem;margin-top:8px;color:#bbb;">${msg||''}</div>
+  </div>
+</div>`;
+}
+
+// 核心：動態載入角色頁面
+async function loadCharPage(id) {
+    const type = getApiType(id);
+    const url  = API_URL + '?type=' + type + '&id=' + encodeURIComponent(id);
+    const container = document.getElementById('char-group') || document.getElementById('main');
+
+    // 發行本次請求的 token，若使用者已離開此頁則 token 會不符，直接放棄
+    const myToken = ++loadCharPage._token;
+
+    try {
+        const res  = await fetch(url);
+        const data = await res.json();
+
+        // ── 離開檢查：token 不符代表使用者已跳去其他頁面 ──
+        if (loadCharPage._token !== myToken) return null;
+
+        // 移除 skeleton 和舊頁面
+        const oldEl = document.getElementById(id);
+        if (oldEl) oldEl.remove();
+        // 清除所有 active-page
+        document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active-page', 'sub-index-active'));
+        // data の id がなければ補完（Apps Script が id を返さない場合の保険）
+        if (!data.id) data.id = id;
+        // エラーレスポンス検出
+        if (data.error) throw new Error(data.error);
+        // 生成並插入 HTML
+        let html = '';
+        if (type === 'char')     html = buildCharHTML(data, false);
+        if (type === 'god')      html = buildGodCharHTML(data, false);
+        if (type === 'founder')  html = buildFounderCharHTML(data, false);
+        if (type === 'lore')     html = buildLoreHTML(data, false);
+        if (type === 'religion') html = buildReligionHTML(data, false);
+        const insertTarget = (type === 'lore' || type === 'religion')
+            ? (document.getElementById('world-group') || container)
+            : container;
+        insertTarget.insertAdjacentHTML('beforeend', html);
+        // 加上 active-page 並觸發進度條
+        const page = document.getElementById(id);
+        if (page) {
+            page.classList.add('active-page');
+            page.querySelectorAll('.stat-bar-fill').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width');
+            });
+            // 設定輪播高度初始化
+            initSettingSliders(page);
+        }
+        renderRandomChars();
+        return page;
+    } catch(e) {
+        // 離開檢查
+        if (loadCharPage._token !== myToken) return null;
+
+        const oldEl = document.getElementById(id);
+        if (oldEl) oldEl.remove();
+        const errMsg = e.message + ' | type=' + type + ' | url=' + url;
+        container.insertAdjacentHTML('beforeend', errorPageHTML(id, errMsg));
+        const errPage = document.getElementById(id);
+        if (errPage) errPage.classList.add('active-page');
+        return errPage;
+    }
+}
+loadCharPage._token = 0; // 全域 token 計數器
+
+// ═══════════════════════════════════════════════
+// 1. 角色清單（依分類）
+// ═══════════════════════════════════════════════
+// ★ 角色清單
+// ── 填入圖片方式：把下方每個 avatar_url 的值換成你的 imgbb 連結 ──
+// ── 試算表有圖片時會自動覆蓋這裡的值，所以填佔位符也沒關係 ──
+const charList = [
+    // ── 土地靈 ──────────────────────────────────
+    { id: 'tp',  name: '台北',   type: 'landspirit', avatar_url: 'https://i.ibb.co/232Wy5GM/IMG-20260117-104455.jpg' }, // ← 貼上台北頭像連結
+    { id: 'ntp', name: '新北',   type: 'landspirit', avatar_url: '' }, // ← 貼上新北頭像連結
+    { id: 'ty',  name: '桃園',   type: 'landspirit', avatar_url: '' }, // ← 貼上桃園頭像連結
+    { id: 'tc',  name: '台中',   type: 'landspirit', avatar_url: '' }, // ← 貼上台中頭像連結
+    { id: 'tn',  name: '台南',   type: 'landspirit', avatar_url: '' }, // ← 貼上台南頭像連結
+    { id: 'kh',  name: '高雄',   type: 'landspirit', avatar_url: '' }, // ← 貼上高雄頭像連結
+    { id: 'kl',  name: '基隆',   type: 'landspirit', avatar_url: '' }, // ← 貼上基隆頭像連結
+    { id: 'hsc', name: '新竹縣', type: 'landspirit', avatar_url: '' }, // ← 貼上新竹縣頭像連結
+    { id: 'hsi', name: '新竹市', type: 'landspirit', avatar_url: '' }, // ← 貼上新竹市頭像連結
+    { id: 'ml',  name: '苗栗',   type: 'landspirit', avatar_url: '' }, // ← 貼上苗栗頭像連結
+    { id: 'ch',  name: '彰化',   type: 'landspirit', avatar_url: '' }, // ← 貼上彰化頭像連結
+    { id: 'nt',  name: '南投',   type: 'landspirit', avatar_url: '' }, // ← 貼上南投頭像連結
+    { id: 'yl',  name: '雲林',   type: 'landspirit', avatar_url: '' }, // ← 貼上雲林頭像連結
+    { id: 'cyc', name: '嘉義縣', type: 'landspirit', avatar_url: '' }, // ← 貼上嘉義縣頭像連結
+    { id: 'cyi', name: '嘉義市', type: 'landspirit', avatar_url: '' }, // ← 貼上嘉義市頭像連結
+    { id: 'pt',  name: '屏東',   type: 'landspirit', avatar_url: '' }, // ← 貼上屏東頭像連結
+    { id: 'il',  name: '宜蘭',   type: 'landspirit', avatar_url: '' }, // ← 貼上宜蘭頭像連結
+    { id: 'hl',  name: '花蓮',   type: 'landspirit', avatar_url: '' }, // ← 貼上花蓮頭像連結
+    { id: 'tt',  name: '台東',   type: 'landspirit', avatar_url: '' }, // ← 貼上台東頭像連結
+    { id: 'ph',  name: '澎湖',   type: 'landspirit', avatar_url: '' }, // ← 貼上澎湖頭像連結
+    { id: 'km',  name: '金門',   type: 'landspirit', avatar_url: '' }, // ← 貼上金門頭像連結
+    { id: 'lj',  name: '連江',   type: 'landspirit', avatar_url: '' }, // ← 貼上連江頭像連結
+    // ── 造物／人類 ──────────────────────────────
+    { id: 'c-k22',           name: 'K_22',  type: 'artificial', avatar_url: '' }, // ← 貼上K_22頭像連結
+    { id: 'c-blue-founder1', name: '「昭」', type: 'artificial', avatar_url: '' }, // ← 貼上昭頭像連結
+    { id: 'c-blue-founder2', name: '「望」', type: 'artificial', avatar_url: '' }, // ← 貼上望頭像連結
+    { id: 'c-d26',           name: 'D_26',  type: 'artificial', avatar_url: '' }, // ← 貼上D_26頭像連結
+    { id: 'c-green-founder', name: '「霖」', type: 'artificial', avatar_url: '' }, // ← 貼上霖頭像連結
+];
+
+// ── 全縣市閱覽完成 → 解鎖提示 ──────────────────────────
+function checkAllCitiesSeen() {
+    updateMvyProgress();
+}
+
+function closeCitiesModal() {
+    const modal = document.getElementById('cities-complete-modal');
+    if (modal) modal.style.display = 'none';
+    localStorage.setItem('fmp_modal_shown', '1');
+}
+
+function copyMvyPassword() {
+    const pwd = "Wranzwjpienwyhaejpdaokqpdawopyknjan:Bknikow.";
+    const btn = document.getElementById('mvy-copy-btn');
+    function showCopied() {
+        if (!btn) return;
+        btn.textContent = '✓ 複製完成';
+        btn.style.color = '#6a9e7a';
+        setTimeout(() => {
+            btn.textContent = '點擊此處取得密碼';
+            btn.style.color = '#8aaba4';
+        }, 2000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(pwd).then(showCopied).catch(() => {
+            // clipboard API 失敗時用舊方法
+            fallbackCopy(pwd);
+            showCopied();
+        });
+    } else {
+        fallbackCopy(pwd);
+        showCopied();
+    }
+}
+function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+}
+
+// ── 測試用：重置所有旅途進程 ──────────────────────────────
+function devResetProgress() {
+    localStorage.removeItem('fmp_seen_cities');
+    localStorage.removeItem('fmp_mvy_unlocked');
+    localStorage.removeItem('fmp_modal_shown');
+    seenCities.clear();
+    updateMvyProgress();
+    const hint = document.getElementById('mvy-unlock-hint');
+    const lock = document.getElementById('mvythzh-lock');
+    const content = document.getElementById('mvythzh-content');
+    if (hint) hint.style.display = 'none';
+    if (lock) lock.style.display = 'flex';
+    if (content) content.style.display = 'none';
+    const btn = document.getElementById('dev-reset-btn');
+    if (btn) { btn.textContent = '✓ 已重置'; setTimeout(() => { btn.textContent = '重置旅途進程'; }, 1500); }
+}
+
+// ── 測試用：直接觸發集齊彈窗 ──────────────────────────────
+function triggerCitiesModal() {
+    const modal = document.getElementById('cities-complete-modal');
+    if (modal) modal.style.display = 'flex';
+}
+
+// ── 測試用：模擬看完所有縣市後回到角色圖鑑 ──────────────
+function devSimulateAllCitiesSeen() {
+    CITY_IDS.forEach(id => seenCities.add(id));
+    localStorage.setItem('fmp_seen_cities', JSON.stringify([...seenCities]));
+    localStorage.removeItem('fmp_modal_shown');
+    updateMvyProgress();
+    checkAllCitiesSeen();
+    // 模擬 goBackToMenu 回到 char-index 的彈窗判定
+    if (seenCities.size >= CITY_IDS.length && localStorage.getItem('fmp_modal_shown') !== '1') {
+        setTimeout(() => {
+            const modal = document.getElementById('cities-complete-modal');
+            if (modal) modal.style.display = 'flex';
+        }, 400);
+    }
+}
+
+function updateMvyProgress() {
+    const bar = document.getElementById('mvy-progress-bar');
+    const label = document.getElementById('mvy-progress-label');
+    const section = document.getElementById('mvy-progress-section');
+    const hint = document.getElementById('mvy-unlock-hint');
+    if (!bar || !label) return;
+    const count = seenCities.size;
+    const total = CITY_IDS.length;
+    bar.style.width = (count / total * 100) + '%';
+    label.textContent = count + ' / ' + total;
+    if (count >= total) {
+        // 集齊：隱藏進度條、顯示取得密碼
+        if (section) section.style.display = 'none';
+        if (hint) hint.style.display = 'block';
+    } else {
+        if (section) section.style.display = 'block';
+        if (hint) hint.style.display = 'none';
+        bar.style.background = '#8aaba4';
+        label.style.color = '#c0b8ae';
+    }
+}
+
+let _charListCache = null;
+
+// ── 彩蛋用計數器 ──────────────────────────────────────
+let _mvy_blank_count = 0;   // 空白驗證次數
+let _mvy_wrong_count = 0;   // 錯誤答案次數
+
+// ── 縣市閱覽追蹤（密碼解鎖提示用）──────────────────────
+const CITY_IDS = ['tp','ntp','ty','tc','tn','kh','kl','hsc','hsi','ml','ch','nt','yl','cyc','cyi','pt','il','hl','tt','ph','km','lj'];
+
+// 從 localStorage 恢復看過的縣市
+const _savedCities = JSON.parse(localStorage.getItem('fmp_seen_cities') || '[]');
+const seenCities = new Set(_savedCities);
+
+// 頁面載入時若已解鎖，直接顯示內容
+if (localStorage.getItem('fmp_mvy_unlocked') === '1') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const lock = document.getElementById('mvythzh-lock');
+        const content = document.getElementById('mvythzh-content');
+        if (lock) lock.style.display = 'none';
+        if (content) content.style.display = 'block';
+    });
+}
+
+// 若已看完所有縣市，恢復提示
+if (seenCities.size >= CITY_IDS.length) {
+    document.addEventListener('DOMContentLoaded', () => { checkAllCitiesSeen(); });
+}
+
+async function fetchCharListWithAvatars() {
+    if (_charListCache) return _charListCache;
+    const fetches = [
+        fetch(API_URL + '?type=char').then(r => r.json()).catch(() => ({ list: [] })),
+        fetch(API_URL + '?type=god').then(r => r.json()).catch(() => ({ list: [] })),
+        fetch(API_URL + '?type=founder').then(r => r.json()).catch(() => ({ list: [] })),
+    ];
+    try {
+        const results = await Promise.all(fetches);
+        const allItems = [];
+        results.forEach(json => { if (json && json.list) allItems.push(...json.list); });
+        allItems.forEach(item => {
+            const found = charList.find(c => c.id === item.id);
+            if (found) {
+                if (item.avatar_url) found.avatar_url = item.avatar_url;
+                found._inSheet = true;
+            }
+        });
+    } catch(e) {}
+    _charListCache = charList;
+    return charList;
+}
+
+function getCharAvatarSrc(char) {
+    if (char.avatar_url) return char.avatar_url;
+    const page = document.getElementById(char.id);
+    if (page) {
+        const img = page.querySelector('.avatar-circle img');
+        if (img) return img.src;
+    }
+    return '';
+}
+
+function charCardHTML(char, gold = false) {
+    const src     = getCharAvatarSrc(char);
+    const imgSrc  = src || 'https://via.placeholder.com/150/' + (gold?'1a1a2e':'e8e0d0') + '/' + (gold?'e2c792':'888') + '?text=' + encodeURIComponent(char.name);
+    const clickable = 'onclick="directToChar(\'' + char.id + '\')" style="cursor:pointer;"';
+    const avatarClass = gold ? 'diamond-avatar gold-diamond' : 'diamond-avatar';
+    return '<div class="char-item" ' + clickable + '>'
+        + '<div class="' + avatarClass + '">'
+        + '<img src="' + imgSrc + '" alt="' + char.name + '">'
+        + '</div>'
+        + '<div class="char-label">' + char.name + '</div>'
+        + '</div>';
+}
+
+// 2. 渲染首頁兩個推薦區塊
+async function renderRandomChars() {
+    const gridLS = document.getElementById('grid-landspirit');
+    const gridAR = document.getElementById('grid-artificial');
+    if (!gridLS || !gridAR) return;
+    // fetch 前確保 loading 佔位存在
+    if (!gridLS.querySelector('.grid-loading')) gridLS.innerHTML = '<div class="grid-loading">Loading…</div>';
+    if (!gridAR.querySelector('.grid-loading')) gridAR.innerHTML = '<div class="grid-loading">Loading…</div>';
+    await fetchCharListWithAvatars().catch(() => {});
+    shuffleAndRenderChars();
+}
+
+// 頭像已抓好的情況下只重新隨機排列，不再打 API
+function shuffleAndRenderChars() {
+    const gridLS = document.getElementById('grid-landspirit');
+    const gridAR = document.getElementById('grid-artificial');
+    if (!gridLS || !gridAR) return;
+    const lsList = charList.filter(c => c.type === 'landspirit');
+    const lsPick = [...lsList].sort(() => 0.5 - Math.random()).slice(0, 4);
+    gridLS.innerHTML = lsPick.map(c => charCardHTML(c, false)).join('');
+    const arList = charList.filter(c => c.type === 'artificial');
+    const arPick = [...arList].sort(() => 0.5 - Math.random()).slice(0, 2);
+    gridAR.innerHTML = arPick.map(c => charCardHTML(c, true)).join('');
+
+    // 各卡片依序錯開出現
+    const allCards = [...gridLS.querySelectorAll('.char-item'), ...gridAR.querySelectorAll('.char-item')];
+    allCards.forEach((card, i) => {
+        card.classList.add('entering');
+        card.style.animationDelay = (i * 0.07) + 's';
+    });
+}
+
+// 3. 首頁跳轉（推薦卡片點擊）
+async function directToChar(pageId) {
+    document.getElementById("welcome-msg").style.display = "none";
+    document.querySelectorAll('.sub-group').forEach(el => el.classList.remove('active-group'));
+    const charGroup = document.getElementById('char-group');
+    if (charGroup) charGroup.classList.add('active-group');
+    document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active-page', 'sub-index-active'));
+    let target = document.getElementById(pageId);
+    if (!target) {
+        const container = document.getElementById('char-group') || document.getElementById('main');
+        container.insertAdjacentHTML('beforeend', skeletonHTML(pageId));
+        updateBackButton();
+        resetFloating();
+        window.scrollTo(0, 0);
+        target = await loadCharPage(pageId);
+    } else {
+        target.classList.add('active-page');
+        target.querySelectorAll('.stat-bar-fill').forEach(bar => {
+            bar.style.width = bar.getAttribute('data-width');
+        });
+    }
+    currentSidebarId = "";
+    updateBackButton();
+    resetFloating();
+    window.scrollTo(0, 0);
+}
+
+    
+    let currentSidebarId = "";
+    let currentIdx = 0; // 用於 777777 的輪播邏輯
+
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("collapsible") || e.target.classList.contains("nested-title")) {
+            const target = e.target;
+            target.classList.toggle(target.classList.contains("collapsible") ? "active-collapse" : "active-nested");
+            const content = target.nextElementSibling;
+            
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                const parentMenu = target.closest(".sub-menu");
+                if (parentMenu) {
+                    parentMenu.style.maxHeight = (parentMenu.scrollHeight + content.scrollHeight) + "px";
+                }
+            }
+        }
+    });
+
+    document.addEventListener("keypress", function(e) {
+        if (e.key === "Enter" && document.activeElement.id === "mvy-pass") {
+            checkMvyPassword();
+        }
+    });
+
+    function checkMvyPassword() {
+        const pass = document.getElementById("mvy-pass").value.trim();
+        const lockBox = document.getElementById("mvythzh-lock");
+
+        if (pass === "Wranzwjpienwyhaejpdaokqpdawopyknjan:Bknikow.") {
+            // ✓ 正確
+            _mvy_blank_count = 0;
+            _mvy_wrong_count = 0;
+            localStorage.setItem('fmp_mvy_unlocked', '1');
+            lockBox.style.display = "none";
+            document.getElementById("mvythzh-content").style.display = "block";
+            return;
+        }
+
+        // 搖晃動畫
+        lockBox.style.animation = "shake 0.3s";
+        setTimeout(() => { lockBox.style.animation = ""; }, 300);
+
+        if (pass === "") {
+            // 空白驗證
+            _mvy_blank_count++;
+            showMvyError(_mvy_blank_count);
+            if (_mvy_blank_count > 6) {
+                setTimeout(() => showGlitch("empty"), 600);
+            }
+        } else {
+            // 錯誤答案
+            _mvy_wrong_count++;
+            showMvyError(_mvy_wrong_count);
+            if (_mvy_wrong_count > 5) {
+                setTimeout(() => showGlitch("wrong"), 600);
+            }
+        }
+    }
+
+    // 錯誤紅字：每次點擊逐漸亂碼化，第5次變問號
+    const _mvy_corrupt_pool = '█▓▒░▄▀▌▐╬╪╫╬ÿøþß∂∑∏∫≈≠≡±×÷¿¡©®™';
+    function corruptText(text, ratio) {
+        return text.split('').map(ch => {
+            if (ch === ' ' || ch === '。' || ch === '/') return ch;
+            return Math.random() < ratio
+                ? _mvy_corrupt_pool[Math.floor(Math.random() * _mvy_corrupt_pool.length)]
+                : ch;
+        }).join('');
+    }
+    function showMvyError(count) {
+        const el = document.getElementById("mvy-error");
+        el.style.display = "block";
+        const base = "密碼錯誤/驗證錯誤。請重新點擊驗證。";
+        if (count >= 6) {
+            el.textContent = "？？？？？？？？？？？？？？？？？？？？";
+        } else {
+            // 1→10%  2→30%  3→55% 4→80%
+            const ratios = [0, 0.10, 0.30, 0.55, 0.80];
+            el.textContent = corruptText(base, ratios[Math.min(count, 4)]);
+        }
+    }
+
+    // ── 假故障頁 ──────────────────────────────────────
+    const _glitch_empty_lines = [
+        "PROCESS_ID: 0x00F0RMOSA > UNEXPECTED TERMINATION",
+        "STACK TRACE: null → null → null → [REDACTED]",
+        "ERR_CODE: 4044 — ENTITY NOT FOUND IN DATABASE",
+        "WARNING: Incorrect input threshold exceeded (×6)",
+        "TRACE: Znoy moxr cgy tkoznkx nasgt tux g jkoze. Gy gt uhykxbkx, ynk yosvre cgzinkj ubkx grr robotm hkotmy ot yorktik.",
+        "MEMORY LEAK: unknown sector 0xDEAD ████████",
+        "Last logged input: [EMPTY] — classification: NOISE",
+        "Attempting recovery... ████████████ FAILED",
+        "System integrity: ██░░░░░░░░ 12%",
+        "> SYS_MSG: 搰涀",
+        "> SYS_MSG: 嬅崌揑婰壇鑘憿圜嬍",
+        "> SYS_MSG: 奙嶵枾狴埵堏師澤丗榋",
+        "INITIATING FORCED REBOOT IN 3 SECONDS...",
+    ];
+    const _glitch_wrong_lines = [
+        "PROCESS_ID: 0x00F0RMOSA > AUTHENTICATION FAILURE",
+        "INPUT_HASH: 0xFF — NO MATCH IN CIPHER TABLE",
+        "ERR_CODE: 4013 — WRONG KEY, WRONG PATH, WRONG ERA",
+        "WARNING: Incorrect input threshold exceeded (×6)",
+        "TRACE: Ynk cgy yu ottuiktz gtj tgobk. Gz znk ygsk zosk, ynk yktykj znuyk yigzzkxkj sksuxoky. Ynk qkvz iurrkizotm znuyk mrozzkxotm lxgmsktzy gtj otzkmxgzotm znks otzu nkx iutyiouaytkyy.",
+        "ANOMALY: Input pattern suggests... ?",
+        "CROSS-REF: Required fragments — ██/22 collected",
+        "SECURITY: Lockdown protocol initiated",
+        "FATAL: Token mismatch — access permanently revoked",
+        "> SYS_MSG: 圜嬍鉙夁帪娫懪杹",
+        "> SYS_MSG: 泙澨摼梥娽柍壣帶枖惼庛柍斾",
+        "> SYS_MSG: 奙嶵枾狴埵堏師澤丗榋",
+        "INITIATING FORCED REBOOT IN 3 SECONDS...",
+    ];
+    
+    
+    let _glitchFlickerTimer = null;
+
+    function showGlitch(type) {
+        const overlay = document.getElementById("glitch-overlay");
+        const linesDiv = document.getElementById("glitch-lines");
+        const countdownDiv = document.getElementById("glitch-countdown");
+        const lines = type === "empty" ? _glitch_empty_lines : _glitch_wrong_lines;
+
+        // 重置計數（避免重複觸發）
+        _mvy_blank_count = 0;
+        _mvy_wrong_count = 0;
+
+        // 清除舊的 flicker timer
+        if (_glitchFlickerTimer) { clearInterval(_glitchFlickerTimer); _glitchFlickerTimer = null; }
+
+        linesDiv.innerHTML = "";
+        overlay.style.display = "block";
+        overlay.classList.add("active");
+        countdownDiv.textContent = "";
+
+        let i = 0;
+        const lineEls = [];
+
+        function typeLine() {
+            if (i < lines.length) {
+                const p = document.createElement("div");
+                p.textContent = lines[i];
+                p.style.opacity = "0";
+                p.style.transition = "opacity 0.2s";
+                linesDiv.appendChild(p);
+                lineEls.push(p);
+                setTimeout(() => { p.style.opacity = "1"; }, 30);
+                i++;
+                setTimeout(typeLine, i < lines.length - 2 ? 160 : 600);
+            } else {
+                // 全行出現後：啟動隨機行閃動
+                startLineFlicker(lineEls);
+
+                // 倒數3秒返回首頁
+                let sec = 3;
+                countdownDiv.textContent = `>> 重啟中 ${sec}`;
+                const tick = setInterval(() => {
+                    sec--;
+                    countdownDiv.textContent = sec > 0
+                        ? `>> 重啟中 ${sec}`
+                        : `>> 重啟完成。返回首頁。`;
+                    if (sec <= 0) {
+                        clearInterval(tick);
+                        if (_glitchFlickerTimer) { clearInterval(_glitchFlickerTimer); _glitchFlickerTimer = null; }
+                        setTimeout(() => {
+                            overlay.classList.remove("active");
+                            overlay.style.display = "none";
+                            linesDiv.innerHTML = "";
+                            if (typeof goHome === 'function') goHome();
+                        }, 800);
+                    }
+                }, 1000);
+            }
+        }
+        typeLine();
+    }
+
+    function startLineFlicker(lineEls) {
+        if (!lineEls.length) return;
+        function doFlicker() {
+            // 隨機挑 1 行閃一下
+            const el = lineEls[Math.floor(Math.random() * lineEls.length)];
+            const orig = el.style.opacity;
+            el.style.transition = "none";
+            el.style.opacity = "0.05";
+            el.style.color = "#fff";
+            const flickDur = 40 + Math.random() * 80;
+            setTimeout(() => {
+                el.style.opacity = "1";
+                el.style.color = "#00ff41";
+            }, flickDur);
+            // 下次閃動：300ms ~ 900ms 後
+            _glitchFlickerTimer = setTimeout(doFlicker, 100 + Math.random() * 150);
+        }
+        _glitchFlickerTimer = setTimeout(doFlicker, 200 + Math.random() * 400);
+    }
+
+    function openTopMenu() { const menu = document.getElementById("topMenu"); menu.style.display = "flex"; setTimeout(() => { menu.classList.add("show"); }, 10); }
+    function closeTopMenu() { const menu = document.getElementById("topMenu"); menu.classList.remove("show"); setTimeout(() => { menu.style.display = "none"; }, 300); }
+
+function goHome() {
+    const home = document.getElementById("welcome-msg");
+    const main = document.getElementById("main");
+    
+    main.style.opacity = "1";
+    main.style.pointerEvents = "auto";
+    home.style.display = "block";
+    
+    document.querySelectorAll('.sub-group').forEach(el => el.classList.remove('active-group'));
+    document.querySelectorAll('.page-content').forEach(el => {
+        el.classList.remove('active-page', 'sub-index-active');
+    });
+
+    // 頭像已在背景抓好，直接重新隨機排列即可
+    if (_charListCache) {
+        shuffleAndRenderChars();
+    } else {
+        renderRandomChars(); // 第一次回首頁才需要 fetch
+    }
+    
+    if(currentSidebarId && document.getElementById(currentSidebarId)) {
+        document.getElementById(currentSidebarId).style.width = "0";
+    }
+    
+    currentSidebarId = "";
+    updateBackButton();
+    window.scrollTo(0,0);
+}
+
+// 從詳細頁面返回所屬分類選單（未展開狀態）
+function goBackToMenu() {
+    // 取消任何進行中的頁面載入
+    loadCharPage._token++;
+    // 收合所有已展開的選單，帶漸出動畫
+    document.querySelectorAll('.new-index-l1.open').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.new-index-l2.open').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.new-index-l2-group, .new-index-l3-group').forEach(el => {
+        el.classList.remove('open');   // opacity → 0 via transition
+        el.style.maxHeight = '0px';
+    });
+    // 舊式 collapsible
+    document.querySelectorAll('.collapsible.active-collapse').forEach(el => {
+        el.classList.remove('active-collapse');
+        const content = el.nextElementSibling;
+        if(content) content.style.maxHeight = null;
+    });
+    document.querySelectorAll('.nested-title.active-nested').forEach(el => {
+        el.classList.remove('active-nested');
+        const content = el.nextElementSibling;
+        if(content) content.style.maxHeight = null;
+    });
+
+    // 找出目前顯示的 page-content 所在的 sub-group，切回其 index 頁面
+    const activePage = document.querySelector('.page-content.active-page');
+    let targetGroupId = null;
+    let targetIndexId = null;
+
+    if (activePage) {
+        const parentGroup = activePage.closest('.sub-group');
+        if (parentGroup) {
+            targetGroupId = parentGroup.id;
+            targetIndexId = targetGroupId.replace('-group', '-index');
+        }
+    }
+
+    document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active-page', 'sub-index-active'));
+
+    if (targetGroupId) {
+        document.querySelectorAll('.sub-group').forEach(el => el.classList.remove('active-group'));
+        const group = document.getElementById(targetGroupId);
+        if (group) group.classList.add('active-group');
+        const indexPage = document.getElementById(targetIndexId);
+        if (indexPage) indexPage.classList.add('sub-index-active');
+    }
+
+    updateBackButton();
+    resetFloating();
+    window.scrollTo(0, 0);
+    // scroll 事件為非同步，defer 確保浮動不殘留
+    setTimeout(resetFloating, 60);
+
+    // 回到角色圖鑑選單時，若剛集齊所有縣市且彈窗尚未顯示過，觸發彈窗
+    if (targetIndexId === 'char-index'
+        && seenCities.size >= CITY_IDS.length
+        && localStorage.getItem('fmp_modal_shown') !== '1') {
+        setTimeout(() => {
+            const modal = document.getElementById('cities-complete-modal');
+            if (modal) modal.style.display = 'flex';
+        }, 400);
+    }
+}
+function updateBackButton() {
+    const btn = document.getElementById('back-to-menu-btn');
+    const hasActivePage = document.querySelector('.page-content.active-page') !== null;
+    btn.style.display = hasActivePage ? 'block' : 'none';
+}
+
+// 強制重設浮動按鈕為初始狀態
+function resetFloating() {
+    const btn = document.getElementById('back-to-menu-btn');
+    const img = document.getElementById('back-btn-img');
+    if (btn) btn.classList.remove('floating');
+    if (img) img.src = 'https://i.ibb.co/Swkxj5nx/IMG-6502.png';
+}
+
+
+
+        function switchMajorCategory(groupId, indexId, titleText) {
+        // 取消任何進行中的頁面載入
+        loadCharPage._token++;
+        document.getElementById("welcome-msg").style.display = "none";
+        
+        // 新增：確保切換大分類時內容是可見的
+        const main = document.getElementById("main");
+        main.style.opacity = "1";
+        main.style.pointerEvents = "auto";
+
+        // 背景預先抓取頭像（不影響顯示，回首頁時直接用）
+        fetchCharListWithAvatars().catch(() => {});
+
+        document.querySelectorAll('.sub-group').forEach(el => el.classList.remove('active-group'));
+        const group = document.getElementById(groupId);
+        if(group) group.classList.add('active-group');
+        
+        document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active-page', 'sub-index-active'));
+        const index = document.getElementById(indexId);
+        if(index) index.classList.add('sub-index-active');
+
+        // 收合所有選單層級並重置樣式
+        document.querySelectorAll('.new-index-l1.open, .new-index-l2.open').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.new-index-l2-group, .new-index-l3-group').forEach(el => {
+            el.classList.remove('open');
+            el.style.maxHeight = '0px';
+        });
+        
+        currentSidebarId = "";
+        
+        updateBackButton();
+        closeTopMenu();
+        resetFloating();
+        window.scrollTo(0,0);
+        setTimeout(resetFloating, 60);
+    }
+
+
+        function toggleSidebar() {
+            // 新版索引無側邊欄，此函數保留以免報錯
+            const main = document.getElementById("main");
+            if(main) { main.style.opacity = "1"; main.style.pointerEvents = "auto"; }
+        }
+
+            async function showPage(pageId) {
+        document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active-page', 'sub-index-active'));
+        // 離開頁面時關閉所有 Q&A 展開項目
+        document.querySelectorAll('.oqa-item').forEach(el => el.removeAttribute('open'));
+
+        // 進入謎語頁時清除紅字錯誤提示並重置計數
+        if (pageId === 'c-mvythzh') {
+            const err = document.getElementById('mvy-error');
+            const inp = document.getElementById('mvy-pass');
+            if (err) {
+                err.style.display = 'none';
+                err.textContent = '密碼錯誤/驗證錯誤。請重新點擊驗證。';
+            }
+            if (inp) inp.value = '';
+            _mvy_blank_count = 0;
+            _mvy_wrong_count = 0;
+            updateMvyProgress();
+            // 已解鎖過：直接顯示內容
+            if (localStorage.getItem('fmp_mvy_unlocked') === '1') {
+                const lock = document.getElementById('mvythzh-lock');
+                const content = document.getElementById('mvythzh-content');
+                if (lock) lock.style.display = 'none';
+                if (content) content.style.display = 'block';
+            }
+        }
+
+        // ── 縣市閱覽追蹤 ──────────────────────────────
+        if (CITY_IDS.includes(pageId)) {
+            seenCities.add(pageId);
+            localStorage.setItem('fmp_seen_cities', JSON.stringify([...seenCities]));
+            updateMvyProgress();
+            if (seenCities.size >= CITY_IDS.length) {
+                checkAllCitiesSeen();
+            }
+        }
+        
+        const main = document.getElementById("main");
+        main.style.opacity = "1";
+        main.style.pointerEvents = "auto";
+
+        let target = document.getElementById(pageId);
+
+        if (!target) {
+            // 判斷頁面所屬 group
+            const isWorld = pageId.startsWith('w-') || pageId.startsWith('g-') || pageId.startsWith('r-');
+            const isOther = pageId.startsWith('other-');
+            const groupId = isWorld ? 'world-group' : isOther ? 'other-group' : 'char-group';
+            document.querySelectorAll('.sub-group').forEach(el => el.classList.remove('active-group'));
+            const grp = document.getElementById(groupId);
+            if (grp) grp.classList.add('active-group');
+            // skeleton 插入正確 group
+            const container = document.getElementById(groupId) || document.getElementById('main');
+            // 先移除上一個殘留的 skeleton（若有）
+            const prevSkeleton = container.querySelector('.page-content.active-page[id]');
+            if (prevSkeleton && !prevSkeleton.querySelector('.profile-container, .lore-container')) prevSkeleton.remove();
+            container.insertAdjacentHTML('beforeend', skeletonHTML(pageId));
+            // bump token：讓所有進行中的舊 fetch 在完成時自動放棄
+            loadCharPage._token++;
+            toggleSidebar();
+            updateBackButton();
+            resetFloating();
+            window.scrollTo(0, 0);
+            target = await loadCharPage(pageId);
+            if (target) {
+                target.querySelectorAll('.stat-bar-fill').forEach(bar => {
+                    bar.style.width = bar.getAttribute('data-width');
+                });
+            }
+        } else {
+            // 切換 active-group
+            const isWorld = pageId.startsWith('w-') || pageId.startsWith('g-') || pageId.startsWith('r-');
+            const isOther = pageId.startsWith('other-');
+            const groupId = isWorld ? 'world-group' : isOther ? 'other-group' : 'char-group';
+            document.querySelectorAll('.sub-group').forEach(el => el.classList.remove('active-group'));
+            const grp = document.getElementById(groupId);
+            if (grp) grp.classList.add('active-group');
+            // 強制 reflow，讓 animation 每次都重新觸發
+            target.style.animation = 'none';
+            target.offsetHeight;
+            target.style.animation = '';
+            target.classList.add('active-page');
+            target.querySelectorAll('.stat-bar-fill').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width');
+            });
+            toggleSidebar();
+            updateBackButton();
+            resetFloating();
+            window.scrollTo(0, 0);
+        }
+    }
+
+/**
+ * 通用輪播函數
+ * @param {HTMLElement} btn - 被點擊的按鈕本人
+ * @param {number} dir - 移動方向 (1 或 -1)
+ */
+function moveSlide(btn, dir) {
+    // 從按鈕出發，尋找同層級容器內的 slider-content
+    const container = btn.closest('.slider-container');
+    const slider = container.querySelector('.slider-content');
+    if (!slider) return;
+
+    // 取得該輪播目前的索引 (存儲在 data-index 屬性中，確保各角色獨立)
+    let currentIndex = parseInt(slider.getAttribute('data-index') || 0);
+    const totalSlides = slider.querySelectorAll('.slide').length;
+
+    // 計算新索引
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = totalSlides - 1;
+    if (currentIndex >= totalSlides) currentIndex = 0;
+
+    // 更新索引並執行位移
+    slider.setAttribute('data-index', currentIndex);
+    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    // 設定輪播：動態調整 wrapper 高度跟著圖片比例
+    if (container.classList.contains('setting-slider')) {
+        adaptSettingSliderHeight(container, currentIndex);
+    }
+}
+
+// 讀取圖片實際尺寸後更新 wrapper 高度
+function adaptSettingSliderHeight(container, index) {
+    const wrapper = container.querySelector('.slider-wrapper');
+    const slides = container.querySelectorAll('.slide');
+    if (!wrapper || !slides[index]) return;
+    const img = slides[index].querySelector('img');
+    if (!img) return;
+    if (img.complete && img.naturalHeight) {
+        // 圖已載入：直接計算
+        const ratio = img.naturalHeight / img.naturalWidth;
+        const displayW = Math.min(img.offsetWidth || wrapper.offsetWidth, 420);
+        wrapper.style.height = (displayW * ratio) + 'px';
+    } else {
+        // 尚未載入：等 load 事件
+        img.addEventListener('load', function() {
+            const ratio = img.naturalHeight / img.naturalWidth;
+            const displayW = Math.min(wrapper.offsetWidth, 420);
+            wrapper.style.height = (displayW * ratio) + 'px';
+        }, { once: true });
+    }
+}
+
+// 頁面動態插入設定輪播後初始化高度（由 loadCharPage 呼叫）
+function initSettingSliders(root) {
+    const target = root || document;
+    target.querySelectorAll('.setting-slider').forEach(container => {
+        adaptSettingSliderHeight(container, 0);
+    });
+}
+
+function openLightbox(src) {
+    const overlay = document.getElementById('lightbox-overlay');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox-overlay').classList.remove('open');
+    document.getElementById('lightbox-img').src = '';
+    document.body.style.overflow = '';
+}
+// ESC 鍵關閉
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+// 事件委派：設定輪播圖點擊（補強 inline onclick 在部分瀏覽器失效的情況）
+document.addEventListener('click', function(e) {
+    const img = e.target.closest('.setting-slider .setting-slide img');
+    if (img && img.src) openLightbox(img.src);
+});
+
+    
+    window.addEventListener('DOMContentLoaded', () => {
+    renderRandomChars(); // 頁面載入時生成第一次隨機頭像
+});
+
+
+
+    // 新版索引：三層摺疊控制
+    function toggleNewSection(trigger, groupId) {
+        const group = document.getElementById(groupId);
+        if (!group) return;
+
+        const isOpen = group.classList.contains('open');
+
+        if (isOpen) {
+            // 先淡出再收合
+            group.classList.remove('open');   // opacity → 0
+            group.style.maxHeight = '0px';
+            trigger.classList.remove('open');
+        } else {
+            group.style.maxHeight = group.scrollHeight + 2000 + 'px';
+            // 下一幀才加 open，確保 transition 能偵測到變化
+            requestAnimationFrame(() => {
+                group.classList.add('open');  // opacity → 1
+            });
+            trigger.classList.add('open');
+            // 同步更新父層高度
+            const parentGroup = trigger.closest('.new-index-l2-group');
+            if (parentGroup) {
+                          parentGroup.style.maxHeight = (parseInt(parentGroup.style.maxHeight || 0) + group.scrollHeight + 500) + 'px';
+            }
+        }
+    }
+
+
+
+    // ── 圖片保護 ──
+    document.addEventListener('contextmenu', function(e) {
+        if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+</script>
+
+<!-- ★ 假故障報錯頁 -->
+<div id="glitch-overlay" style="display:none; position:fixed; inset:0; z-index:99999; background:#0a0a0a; color:#00ff41; font-family:'Courier New',monospace; padding:40px 30px; overflow:hidden; box-sizing:border-box;">
+  <div id="glitch-content" style="max-width:600px; margin:0 auto; line-height:2;">
+    <div style="color:#ff3333; font-size:1.1rem; letter-spacing:2px; margin-bottom:20px;">
+      ██ SYSTEM ERROR ██ CRITICAL FAILURE ██
+    </div>
+    <div id="glitch-lines" style="font-size:0.8rem; opacity:0.85;"></div>
+    <div style="margin-top:30px; color:#ffcc00; font-size:0.85rem;" id="glitch-countdown"></div>
+  </div>
+</div>
+<!-- ★ 集齊所有縣市彈窗 -->
+<div id="cities-complete-modal" style="display:none; position:fixed; inset:0; z-index:9998; background:rgba(0,0,0,0.45); align-items:center; justify-content:center;">
+  <div style="background:#fafaf8; border:1px solid #d5cfc5; border-radius:4px; max-width:320px; width:88%; padding:36px 28px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.12); position:relative; animation:fadeIn 0.4s ease;">
+    <div style="font-size:1.1rem; color:#3E4644; letter-spacing:3px; margin-bottom:10px;">✦ 旅途完成 ✦</div>
+    <div style="width:32px; height:1px; background:#c8bfb0; margin:0 auto 18px;"></div>
+    <p style="font-size:0.82rem; color:#666; line-height:1.9; margin-bottom:22px;">
+      你已走遍每一片土地。<br>
+      前往謎語頁，密碼就在那裡等你。
+    </p>
+    <button onclick="closeCitiesModal()" style="padding:9px 28px; background:#3E4644; color:#f5f0e8; border:none; border-radius:2px; font-size:0.8rem; letter-spacing:2px; cursor:pointer;">知道了</button>
+  </div>
+</div>
+
+</body>
+</html>
